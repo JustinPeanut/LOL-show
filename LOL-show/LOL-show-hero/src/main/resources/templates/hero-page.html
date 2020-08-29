@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>英雄列表</title>
+    <base th:href="@{/}"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/mainNavBack.css"/>
+    <link rel="stylesheet" type="text/css" href="css/clearDefault.css"/>
+    <link rel="stylesheet" type="text/css" href="css/login.css"/>
+    <link rel="stylesheet" type="text/css" href="css/home.css">
+    <link rel="stylesheet" type="text/css" href="css/hero.css"/>
+    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="layer/layer.js"></script>
+    <script>
+        function setLi() {
+            let li = $(".selectBox li");
+            // 首先取消所有的i标签的选中class
+            for(let j = 0; j < li.length ; j++){
+                $(li[j]).removeClass("current");
+            }
+            // 为当前点击的i标签添加current
+            $(li[window.liIndex]).addClass("current");
+        }
+
+        function fillHeroBox(data){
+            // 将ul全部清空
+            $(".imgShowList").empty();
+            if(data == null || data.length == 0){
+                $(".imgShowList").append("<p>抱歉！没有查询到任何数据！</p>");
+                return;
+            }
+            // 填充数据
+            for(let i = 0 ; i < data.length ; i++){
+                $(".imgShowList").append(
+                    "<li>" +
+                    "                <a href='http://localhost/hero/detail/"+data[i].id+"' title='"+data[i].fullName+"'>" +
+                    "                    <img src='"+data[i].imgSmall+"' />" +
+                    "                </a>" +
+                    "                <p>"+data[i].fullName+"</p>" +
+                    "            </li>"
+                )
+            }
+        }
+        function liAjax() {
+            $.ajax({
+                "url": "http://localhost/hero/detail/by/type.json",
+                "type": "post",
+                "data": {
+                    "id": window.liIndex,
+                },
+                "success": function (result) {
+                    let data = result.data;
+                    fillHeroBox(data);
+                },
+                "error": function (result) {
+                    layer.msg("操作失败 " + result.statusText);
+                }
+            });
+        }
+        $(function () {
+            // 获取selectBox全部的li
+            let li = $(".selectBox li");
+            for(let i = 0 ; i < li.length ; i++){
+                // 绑定单击响应函数
+                $(li[i]).click(function () {
+                    window.liIndex = i;
+                    setLi();
+                    // 发送ajax请求
+                    liAjax();
+                });
+            }
+            // 为输入英雄名称的文本框绑定文本改变的事件
+            $(".inputSearch").on("input",function () {
+                let heroName = $(this).val();
+                console.log(heroName);
+                // 即时获取输入框中的内容，并且发送ajax请求
+                if(heroName == ""){
+                    window.liIndex = 0;
+                    setLi();
+                    liAjax()
+                }
+                let result = $.ajax({
+                    "url": "http://localhost/hero/detail/by/name.json",
+                    "type": "post",
+                    "data": {
+                        "name": heroName
+                    },
+                    "dataType": "json",
+                    "async": false
+                });
+                if(result.status != 200){
+                    layer.msg("操作失败！ "+result.statusText);
+                    return;
+                }
+                // 获取响应的json
+                let responseJson = result.responseJSON;
+                // 如果成功，弹框
+                fillHeroBox(responseJson.data);
+            })
+        });
+    </script>
+</head>
+<body>
+<!--顶栏-->
+<div id="title" th:replace="include-title :: #title">
+    <!--            侧边栏-->
+    <div id="min-content">
+        <ul class="ulContent">
+            <li><a class="content-a" href="main.html">主页</a></li>
+            <li><a class="content-a" href="#">直播</a> </li>
+            <li><a class="content-a" href="#">赛事</a></li>
+            <li><a class="content-a" href="#">打赏</a></li>
+            <li><a class="content-a" href="#">敬请期待</a></li>
+        </ul>
+    </div>
+    <!--            用户信息-->
+    <div id="customer">
+        <div id="customerLine">
+            <a class="customer-a" href="login.html">登录</a>
+            <a class="customer-a" href="regist.html">注册</a>
+            <a class="customer-a" href="#">个人主页</a>
+            <a class="customer-a" href="#">退出</a>
+        </div>
+    </div>
+    <!--            搜索框-->
+    <div id="search-content">
+        <form style="float: left" class="form-inline">
+            <div class="form-group">
+                <input style="width: 400px;" type="text" class="form-control" id="exampleInputName2">
+                <button class="btn btn-default" style="float: right;width: 44px;height: 42px;"><i class="glyphicon glyphicon-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--头部装饰栏-->
+<div id="top-banner"></div>
+
+<!--英雄栏-->
+<div class="heroBox">
+    <div class="heroShowBox">
+        <ul class="selectBox">
+            <li class="selectItem current">
+                <span class="heroRadio">
+                    <i class="i"></i>
+                </span>
+                <label>所有英雄</label>
+            </li>
+            <li class="selectItem">
+                <span class="heroRadio">
+                    <i class="i"></i>
+                </span>
+                <label>战士</label>
+            </li>
+            <li class="selectItem">
+                <span class="heroRadio">
+                    <i class="i"></i>
+                </span>
+                <label>法师</label>
+            </li>
+            <li class="selectItem">
+                <span class="heroRadio">
+                    <i class="i"></i>
+                </span>
+                <label>刺客</label>
+            </li>
+            <li class="selectItem">
+                <span class="heroRadio">
+                    <i class="i"></i>
+                </span>
+                <label>坦克</label>
+            </li>
+            <li class="selectItem">
+                <span class="heroRadio">
+                    <i class="i"></i>
+                </span>
+                <label>射手</label>
+            </li>
+        </ul>
+        <div class="heroSearchBox">
+            <input type="text" class="inputSearch" placeholder="请输入英雄名">
+            <span class="btnSearch">搜索</span>
+        </div>
+        <ul class="imgShowList">
+            <p th:text="${exception}">这里显示异常信息</p>
+            <div th:if="${heroPageVOList == null}">抱歉！没有查询到任何数据，请稍后再试！</div>
+            <div th:if="${heroPageVOList !=null}">
+                <li th:each="hero : ${heroPageVOList}">
+                    <a th:href="'http://localhost/hero/detail/'+${hero.id}" th:title="${hero.fullName}" title="黑暗之女">
+                        <img th:src="${hero.imgSmall}" src="img/heroBoxList/Annie.png" />
+                    </a>
+                    <p th:text="${hero.fullName}">黑暗之女</p>
+                </li>
+            </div>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

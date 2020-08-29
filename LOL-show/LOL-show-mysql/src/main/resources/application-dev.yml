@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://47.105.40.183:3306/lol-show?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: rootroot
+  application:
+    name: LOL-show-mysql-provider
+mybatis:
+  mapper-locations: classpath*:mybatis/mapper/*Mapper.xml
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:1000/eureka
+server:
+  port: 2000
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  page-size-zero: true  #当pageSize等于0时，相当于查询出了全部的结果

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--顶栏-->
+<div id="title" th:fragment="Toptitle">
+    <!--            侧边栏-->
+    <div id="min-content">
+        <ul class="ulContent">
+            <li><a class="content-a" th:href="@{http://localhost/}" href="/">主页</a></li>
+            <li><a class="content-a" href="#">作者博客</a></li>
+            <li><a class="content-a" href="#">敬请期待</a></li>
+        </ul>
+    </div>
+    <!--            用户信息-->
+    <div id="customer">
+        <div id="customerLine">
+            <a th:if="${session.loginMember == null}" class="customer-a" href="/to/login/page">登录</a>
+            <span th:if="${session.loginMember != null}" class="customer-a" th:text="${session.loginMember.roleName}">
+                        这里显示登陆用户的角色名称
+                    </span>
+
+            <a class="customer-a" href="to/regist/page">注册</a>
+            <a class="customer-a" href="to/member/home/page">个人主页</a>
+            <a class="customer-a" href="/quit/login/member">退出</a>
+        </div>
+    </div>
+    <!--            搜索框-->
+    <div id="search-content">
+        <form style="float: left" class="form-inline">
+            <div class="form-group">
+                <input style="width: 400px;" type="text" class="form-control" id="exampleInputName2">
+                <button class="btn btn-default" style="float: right;width: 44px;height: 42px;"><i class="glyphicon glyphicon-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

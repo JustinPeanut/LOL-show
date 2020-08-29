@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--    导航栏-->
+<div id="marketNav" class="marketNav" th:fragment="marketNav">
+    <!--        logo-->
+    <div class="storeNav">
+        <!--            商品ul-->
+        <div class="storeUl">
+            <ul>
+                <li><a href="http://localhost/market/to/market/home/page">商品列表</a></li>
+                <li><a href="#">活动专区</a></li>
+                <li><a href="http://localhost/to/member/home/page">个人中心</a></li>
+            </ul>
+        </div>
+        <!--购物车-->
+        <div id="marketCart" class="marketCart" th:fragment="marketCart">
+            <a href="http://localhost/order/to/hero/submit/page" class="btn-cart-a" title="购物车">
+                <i id="cartNum" th:if="${session.listSize == null}" th:text="'('+ 0 +')'">(0)</i>
+                <i id="cartNum" th:if="${session.listSize != null}" th:text="'('+${session.listSize}+')'">(0)</i>
+                <s class="cartIco"></s>
+                购物车
+            </a>
+        </div>
+    </div>
+    <!--        子导航栏-->
+    <div class="subNav">
+        <ul class="subUl">
+            <li><a href="javascript:;">英雄</a></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

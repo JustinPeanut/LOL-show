@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>info</title>
+    <base th:href="@{/}"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/mainNavBack.css"/>
+    <link rel="stylesheet" type="text/css" href="css/clearDefault.css"/>
+    <link rel="stylesheet" type="text/css" href="css/login.css"/>
+    <link rel="stylesheet" type="text/css" href="css/home.css"/>
+    <link rel="stylesheet" type="text/css" href="css/info.css"/>
+    <style type="text/css">
+        #infoBox button{
+            position: relative;
+            left: 44px;
+            top: 63px;
+            width: 254px;
+        }
+    </style>
+    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#saveInfo").click(function(){
+                // 获取textarea中的文本值
+                let textVal = $("#userText").val();
+                // 设置隐藏域的属性
+                $("#textAreaHidden").val(textVal);
+                $("form").submit();
+            });
+
+        })
+    </script>
+
+
+</head>
+<body>
+<div id="title" th:replace="home-page :: #title">
+    <!--            侧边栏-->
+    <div id="min-content">
+        <ul class="ulContent">
+            <li><a class="content-a" href="main.html">主页</a></li>
+            <li><a class="content-a" href="#">直播</a></li>
+            <li><a class="content-a" href="#">赛事</a></li>
+            <li><a class="content-a" href="#">打赏</a></li>
+            <li><a class="content-a" href="#">敬请期待</a></li>
+        </ul>
+    </div>
+    <!--            用户信息-->
+    <div id="customer">
+        <div id="customerLine">
+            <a class="customer-a" href="login.html">登录</a>
+            <a class="customer-a" href="regist.html">注册</a>
+            <a class="customer-a" href="#">个人主页</a>
+            <a class="customer-a" href="#">退出</a>
+        </div>
+    </div>
+    <!--            搜索框-->
+    <div id="search-content">
+        <form>
+            <input type="text"/>
+            <div id="searchBtn">
+                <!--                    搜索按钮-->
+                <button type="button"><img src="img/main/searchBtn.png"/></button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--头部装饰栏-->
+<div id="top-banner"></div>
+
+
+<div id="userMainContent">
+    <!--左侧导航栏-->
+    <div class="leftContent">
+        <div class="userTitle">
+            <span>个人中心</span>
+        </div>
+        <div class="userTitle">
+            <ul>
+                <li><span><a href="to/member/home/page">首页</a></span></li>
+                <li><span><a href="to/member/plan/page">今日计划</a></span></li>
+                <li class="activeLi"><span><a href="to/update/member/info/page">我的信息</a></span></li>
+                <li><span><a href="to/member/hero/page">我的英雄</a></span></li>
+                <li><span><a href="http://localhost/order/to/hero/submit/page">我的订单</a></span></spqn></li>
+                <li><span><a href="to/member/wallet">我的钱包</a></span></li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="userInfo">
+        <div id="infoTitle">
+            <!--            装饰条-->
+            <div id="right-line"></div>
+            <span>我的信息</span>
+        </div>
+        <div id="infoBox">
+            <form class="searchForm" action="/do/update/member/info" method="post">
+                <div class="user-nick-name">
+                    <!--                    标签-->
+                    <label id="nick-name-label">
+                        昵称：
+                    </label>
+                    <input name="roleName" th:placeholder="${session.loginMember.roleName}" type="text" placeholder="你的昵称"/>
+                </div>
+                <!--                登陆的名称-->
+                <div class="user-real-nick-name">
+                    <label id="user-name-label">
+                        用户名：
+                    </label>
+                    <!--                    用户名-->
+                    <span th:text="${session.loginMember.userName}">Peanut</span>
+                </div>
+                <div class="user-sign">
+                    <label id="user-sign-label">
+                        我的简介：
+                    </label>
+                    <!--                    简介-->
+                    <div class="testArea">
+                        <textarea id="userText" th:if="${#strings.isEmpty(session.loginMember.userText)}" placeholder="您的简介" type="textarea" rows="2" autocomplete="off" validateevent="true"></textarea>
+                        <textarea id="userText" th:if="${not #strings.isEmpty(session.loginMember.userText)}" th:text="${session.loginMember.userText}" placeholder="您的简介" type="textarea" rows="2" autocomplete="off" validateevent="true"></textarea>
+                    </div>
+                    <input id="textAreaHidden" type="hidden" name="userText"/>
+                </div>
+                <div class="user-age">
+                    <label class="nick-name-label">
+                        年龄：
+                    </label>
+                    <input name="age" type="text" th:placeholder="${session.loginMember.age}" placeholder="18"/>
+                </div>
+                <button class="btn btn-success" type="button" id="saveInfo">保存</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+</html>

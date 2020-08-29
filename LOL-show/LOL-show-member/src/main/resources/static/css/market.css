@@ -1,0 +1,370 @@
+.marketNav{
+    height: 125px;
+    width: 1190px;
+    /*background-color: yellow;*/
+    margin: 50px auto;
+    border-bottom: 1px solid #ced3db;
+}
+.storeNav{
+    height: 70px;
+    background-image: url("/img/ico/navico.png");
+    background-position: -110px -100px;
+}
+.storeUl{
+    float: left;
+    width: 940px;
+    height: 70px;
+    line-height: 70px;
+}
+.storeUl ul{
+    display: flex;
+}
+.storeUl li{
+    font-family: "JetBrains Mono";
+    font-size: 30px;
+    margin: 0 50px;
+}
+.storeUl a{
+    text-decoration: none;
+    color: #ced3db;
+}
+.storeUl a:hover{
+    color: #ff5900;
+}
+
+.marketCart{
+    float: right;
+    width: 150px;
+    height: 70px;
+}
+.btn-cart-a{
+    text-decoration: none;
+    position: absolute;
+    right: 205px;
+    line-height: 65px;
+    font-size: 25px;
+    font-family: "JetBrains Mono";
+    outline: none;
+    color: #ff5900;
+}
+.btn-cart-a:hover{
+    text-decoration: none;
+}
+.cartIco{
+    position: absolute;
+    right: 80px;
+    top: 22px;
+    width: 28px;
+    height: 24px;
+    background-image: url("/img/ico/navico.png");
+    background-position: -237px -5px;
+    display: block;
+}
+#cartNum{
+    position: relative;
+    left: 110px;
+}
+.subNav{
+    width: 940px;
+    line-height: 52px;
+}
+.subNav ul{
+    display: flex;
+}
+.subNav li{
+    margin: 0 50px;
+    font-family: "JetBrains Mono";
+    font-size: 20px;
+
+}
+.subNav a{
+    text-decoration: none;
+    color: #ced3db;
+}
+.marketContent{
+    width: 1190px;
+    height: 500px;
+    margin: 0 auto;
+}
+.marketSideBar{
+    width: 228px;
+    float: left;
+    padding: 0 13px 0 0;
+    background: #fafbfc;
+    height: auto;
+}
+.marketSideBar h3{
+    margin-left: 18px;
+    font-size: 16px;
+    color: #555;
+    font-weight: bold;
+    height: 47px;
+    border-bottom: 2px solid #f3f4f6;
+    line-height: 54px;
+    text-indent: 6px;
+    position: relative;
+}
+.green-line{
+    position: absolute;
+    top: 47px;
+    left: 0;
+    z-index: 1;
+    width: 80px;
+    height: 2px;
+    background: #36ab87;
+    display: block;
+}
+.hotRank li{
+    min-height: 71px;
+    height: auto;
+    border-bottom: 1px dashed #e7e7e7;
+    transition: all .2s linear;
+}
+.hotRank{
+    height: auto;
+    margin-left: 20px;
+    padding-bottom: 10px;
+}
+.hotRank a{
+    display: block;
+    width: 100%;
+    padding-top: 15px;
+    position: relative;
+    color: #3a3f4a;
+    text-decoration: none;
+    outline: none;
+}
+.icoRank{
+    position: absolute;
+    top: 8px;
+    left: 0;
+    z-index: 1;
+    display: block;
+    width: 20px;
+    height: 24px;
+    background-position: -5px -592px;
+    font-size: 12px;
+    text-align: center;
+    line-height: 20px;
+    color: #fff;
+}
+.comIco{
+    background-image: url("/img/ico/comico.png");
+    background-position: -6px -594px;
+}
+.djimg{
+    margin-left: 3px;
+    width: 76px;
+    height: 54px;
+    float: left;
+}
+.djimg img{
+    display: block;
+    width: 76px;
+    height: 54px;
+}
+img{
+    border: 0;
+    vertical-align: middle;
+}
+.djinfo{
+    width: 108px;
+    overflow: hidden;
+    color: #222;
+    float: right;
+}
+.djname{
+    width: 108px;
+    font-size: 12px;
+    font-weight: bold;
+    height: 14px;
+    line-height: 12px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.djprice{
+    margin-top: 8px;
+    height: 15px;
+}
+.djcpri{
+    margin-top: 3px;
+    color: #333;
+    height: 18px;
+    padding-bottom: 15px;
+}
+strong{
+    font-weight: bold;
+}
+
+.heroPage{
+    width: 949px;
+    float: right;
+}
+.heroBar{
+    width: 950px;
+    height: 34px;
+    line-height: 34px;
+    border: 1px dashed #e1e1e1;
+    margin-bottom: 10px;
+}
+.heroTitle{
+    margin: 0 12px;
+    color: #616161;
+    width: 60px;
+    float: left;
+}
+.heroList{
+    float: left;
+}
+.heroList li{
+    float: left;
+    padding: 0 13px;
+    color: #333;
+}
+.heroList li a{
+    color: #3a3f4a;
+    text-decoration: none;
+    outline: none;
+}
+.heroItem{
+    padding: 18px 15px 0 15px;
+}
+.searchBar{
+    float: left;
+}
+.search-input{
+    height: 24px;
+    border: 1px solid #ccc;
+    width: 338px;
+    padding: 0 2px;
+    font-size: 100%;
+    line-height: 150%;
+}
+.priceBar{
+    margin-left: 20px;
+    float: left;
+    text-align: left;
+}
+.input-area-txt{
+    height: 24px;
+    border: 1px solid #ccc;
+    width: 34px;
+    margin: 0 3px;
+    padding: 0 2px;
+    font-size: 100%;
+    line-height: 150%;
+}
+.searchBtn{
+    float: left;
+}
+.searchBtn a{
+    background: #f5f5f5;
+    width: 44px;
+    height: 24px;
+    line-height: 24px;
+    display: inline-block;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    color: #222;
+    font-size: 12px;
+    text-align: center;
+    text-decoration: none;
+    margin-left: 10px;
+    color: #3a3f4a;
+    text-decoration: none;
+    outline: none;
+}
+.filterBox{
+    width: 952px;
+    height: 68px;
+    background: #ededed;
+}
+.letter-filter{
+    width: 952px;
+    height: 34px;
+    line-height: 34px;
+    background: #e8e8e8;
+    font-size: 14px;
+    color: #616161;
+    margin-top: 10px;
+}
+.letter-filter li{
+    float: left;
+    padding: 0 9px;
+}
+.letter-filter li a{
+    color: #3a3f4a;
+    text-decoration: none;
+    outline: none;
+}
+.listWarp{
+    height: auto;
+    background: #fafbfc;
+    margin-top: 10px;
+}
+.listBox{
+    position: relative;
+    padding-top: 17px;
+    z-index: 2;
+}
+.listBox dl{
+    margin: 0 16px 19px 16px;
+    zoom: 1;
+    float: left;
+    width: 202px;
+    height: 370px;
+    display: block;
+    position: relative;
+    color: #606060;
+    background: url(/img/ico/indexico.png) no-repeat;
+    background-position: -237px -6px;
+    z-index: 11;
+    cursor: default;
+}
+.listBox dl dt{
+    float: left;
+    margin-bottom: 11px;
+    width: 202px;
+    height: 235px;
+    display: block;
+    position: relative;
+}
+.listBox a{
+    color: #3a3f4a;
+    text-decoration: none;
+    outline: none;
+}
+.listBox dl dt img{
+    margin: 23px auto 0;
+    display: block;
+    width: 116px;
+    height: 212px;
+}
+.listBox dl dd{
+    float: left;
+    margin: 0 auto;
+    width: 202px;
+    line-height: 17px;
+    text-align: center;
+}
+.fwb{
+    color: #ff5900;
+    font-size: 14px;
+    font-weight: bold;
+}
+.purchaseDiv{
+    margin: 10px auto 0;
+    width: 124px;
+    height: 32px;
+    zoom: 1;
+}
+.buyNow{
+    width: 124px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    background: #36ab87;
+    color: #fff;
+    display: block;
+}

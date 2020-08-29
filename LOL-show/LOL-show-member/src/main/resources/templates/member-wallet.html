@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>我的钱包</title>
+    <base th:href="@{/}"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/mainNavBack.css"/>
+    <link rel="stylesheet" type="text/css" href="css/clearDefault.css"/>
+    <link rel="stylesheet" type="text/css" href="css/login.css"/>
+    <link rel="stylesheet" type="text/css" href="css/home.css"/>
+    <link rel="stylesheet" type="text/css" href="css/wallet.css"/>
+    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap/bootstrap-min.js"></script>
+    <script type="text/javascript" src="layer/layer.js"></script>
+    <script>
+        // true:数值型的，false：非数值型
+        function isNumber(value) {
+            var patrn = /^(-)?\d+(\.\d+)?$/;
+            if (patrn.exec(value) == null || value == "") {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        $(function () {
+            // 获取所有的模态框中的li
+            let li = $("#reChangeUl li");
+            // 为充值按钮绑定单击响应函数
+            $("#recharge").click(function () {
+                // 开启模态框之前，清空模态框中的内容
+                for(let j = 0 ; j < li.length ; j++){
+                    $(li[j]).removeClass("active");
+                }
+                // 开启模态框
+                    $("#reChangePrice").val("");
+                    $("#reChangeModal").modal("show");
+            });
+            for(let i = 0 ; i < li.length ; i++){
+                 $(li[i]).click(function () {
+                     // 首先去除所有的li选中状态
+                     for(let j = 0 ; j < li.length ; j++){
+                        $(li[j]).removeClass("active");
+                    }
+                     $(this).addClass("active");
+                 })
+            }
+            // 为模态框中的充值按钮绑定单击响应函数
+            $("#submitRechange").click(function () {
+                // 获取订单信息
+                // 获取所有的li
+                let price = $("#reChangePrice").val();
+                let li = $("#reChangeUl li");
+                // 如果price不是数字，那么就看有没有选中标准额度
+                // 遍历所有的li
+                for(var i = 0 ; i < li.length ; i++){
+                    if($(li[i]).hasClass("active")){
+                         price = parseInt($(li[i].childNodes[0]).html());
+                    }
+                }
+                if(isNumber($("#reChangePrice").val())){
+                    // 是否有别的价格，别的价格优先
+                    price = $("#reChangePrice").val();
+                }
+                // 如果price是数字的话，则存入order，发送ajax请求
+                if(isNumber(price)){
+                    console.log(price)
+                    // 发送ajax请求
+                    $.ajax({
+                        "url": "order/save/to/wallet",
+                        "type": "post",
+                        "data": {
+                            "price": price
+                        },
+                        "dataType": "json",
+                        "success":function (result) {
+                            console.log(result)
+                        },
+                        "error": function (result) {
+                            layer.msg("请重新刷新，稍后再试！ "+ result.statusText);
+                        },
+                        "async": false
+                    });
+                }
+                // 发送付费请求
+                window.location.href = "http://localhost/pay/create/pay/list"
+            })
+
+        })
+    </script>
+</head>
+<body>
+<!--顶栏-->
+<div id="title" th:replace="home-page :: #title">
+    <!--            侧边栏-->
+    <div id="min-content">
+        <ul class="ulContent">
+            <li><a class="content-a" href="main.html">主页</a></li>
+            <li><a class="content-a" href="#">直播</a> </li>
+            <li><a class="content-a" href="#">赛事</a></li>
+            <li><a class="content-a" href="#">打赏</a></li>
+            <li><a class="content-a" href="#">敬请期待</a></li>
+        </ul>
+    </div>
+    <!--            用户信息-->
+    <div id="customer">
+        <div id="customerLine">
+            <a class="customer-a" href="login.html">登录</a>
+            <a class="customer-a" href="regist.html">注册</a>
+            <a class="customer-a" href="#">个人主页</a>
+            <a class="customer-a" href="#">退出</a>
+        </div>
+    </div>
+    <!--            搜索框-->
+    <div id="search-content">
+        <form style="float: left" class="form-inline">
+            <div class="form-group">
+                <input style="width: 400px;" type="text" class="form-control" id="exampleInputName2">
+                <button class="btn btn-default" style="float: right;width: 44px;height: 42px;"><i class="glyphicon glyphicon-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--头部装饰栏-->
+<div id="top-banner"></div>
+
+
+<div id="userMainContent">
+    <!--左侧导航栏-->
+    <div class="leftContent">
+        <div class="userTitle">
+            <span>个人中心</span>
+        </div>
+        <div class="userTitle">
+            <ul>
+                <li><span><a href="to/member/home/page">首页</a></span></li>
+                <li><span><a href="to/member/plan/page">今日计划</a></span></li>
+                <li><span><a href="to/update/member/info/page">我的信息</a></span></li>
+                <li><span><a href="to/member/hero/page">我的英雄</a></span></li>
+                <li><span><a href="http://localhost/order/to/hero/submit/page">我的订单</a></span></span></li>
+                <li class="activeLi"><span><a href="to/member/wallet">我的钱包</a></span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="walletContent">
+        <!--        标题-->
+        <div class="walletTitle">
+            <div id="walletTitleIco"><img src="img/ico/icons.png"/></div>
+            <span>我的账户</span>
+        </div>
+        <div class="walletMain">
+            <p class="walletMainTitle">账户余额</p>
+            <div th:if="${walletVO == null}" th:text="${exception}">这里显示异常信息</div>
+            <div th:if="${walletVO !=null}">
+                <h3 th:text="${walletVO.walletLast}">0</h3>
+                <span>LB</span>
+                <a id="recharge" href="javascript:;">充值</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--添加计划模态框-->
+<div class="modal fade" id="reChangeModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">充值</h4>
+            </div>
+            <div class="modal-body">
+                <ul id="reChangeUl" class="nav nav-pills" style="font-size: 16px;font-family: 'JetBrains Mono'">
+                    <li role="presentation"><a href="javascript:;">50￥</a></li>
+                    <li role="presentation"><a href="javascript:;">100￥</a></li>
+                    <li role="presentation"><a href="javascript:;">200￥</a></li>
+                    <li role="presentation"><a href="javascript:;">300￥</a></li>
+                    <input id="reChangePrice" style="position: relative;width: 125px;float: right;left: -122px;top:5px" type="text" class="form-control" placeholder="其他价格" />
+                    <label style="position: relative;left: 154px;top: 11px">￥</label>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="submitRechange" type="button" class="btn btn-success">充值</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</body>
+</html>

@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: LOL-show-eureka
+server:
+  port: 1000
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    fetch-registry: false  #不必取回信息
+    register-with-eureka: false #不必自己注册自己
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka

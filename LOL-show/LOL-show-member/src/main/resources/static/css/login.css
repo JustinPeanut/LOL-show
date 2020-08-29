@@ -1,0 +1,92 @@
+#top-banner{
+    width: 980px;
+    height: 150px;
+    margin: 0 auto;
+    background-image: url("/img/login/loginTop.jpg");
+    background-repeat: no-repeat;
+}
+.title-line .tit {
+    height: 56px;
+    line-height: 56px;
+    margin: 0 auto;
+    padding: 0 20px;
+    font-size: 40px;
+    background: #fff;
+    text-align: center;
+}
+.title-line{
+    width: 980px;
+    height: 28px;
+    margin: 0 auto;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 28px;
+    text-align: center;
+}
+#loginBox{
+    position: relative;
+    width: 980px;
+    margin: 0 auto;
+
+}
+#loginLeft{
+    font-family: "JetBrains Mono";
+    font-size: 15px;
+    position: absolute;
+    top: 30px;
+    left:170px;
+}
+.line{
+    position: absolute;
+    border-right: 1px solid #ddd;
+    height: 300px;
+    left: 490px;
+}
+#loginLeftPic{
+    position: relative;
+    left: -140px;
+    top: 30px;
+}
+
+#form-login{
+    width: 270px;
+    height: 50px;
+    position: relative;
+    left: 550px;
+    top: 80px;
+}
+.loginInput{
+    width: 100%;
+    height: 100%;
+    font-size: 15px;
+    font-family: "JetBrains Mono";
+    margin: 2px 0 ;
+}
+.loginBtn{
+    width: 403px;
+    height: 50px;
+    margin: 2px;
+    position: relative;
+    right: -6px;
+}
+
+#loginLeft span{
+    font-size: 25px;
+    color: darkgrey;
+    font-family: "JetBrains Mono";
+    position: relative;
+    left: -60px;
+    top: 50px;
+}
+#registBox{
+    width: 420px;
+    height: 360px;
+    margin: 0 auto;
+}
+.registBtn{
+    width: 400px;
+    height: 40px;
+    margin: 2px 0;
+}
+#form-login button{
+    margin-top: 10px;
+}

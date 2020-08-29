@@ -1,0 +1,106 @@
+.purchaseDetail{
+    width: 949px;
+    float: right;
+    background: #fafbfc;
+    padding: 30px 0 14px;
+}
+.detailInfoBox{
+    margin-left: 58px;
+    width: 888px;
+    height: 360px;
+}
+.detailImg{
+    margin-top: 35px;
+    float: left;
+}
+.bigImg{
+    width: 260px;
+    height: 154px;
+    vertical-align: middle;
+    text-align: center;
+    position: relative;
+}
+.bigImg img{
+    width: 260px;
+    height: 154px;
+}
+.buyBox{
+    width: auto;
+    margin-left: 23px;
+    overflow: hidden;
+    float: left;
+    height: 200px;
+}
+.buyName{
+    width: 450px;
+    text-align: left;
+    font-size: 18px;
+    text-indent: 15px;
+    font-weight: bold;
+    color: #2e2e2e;
+    margin-top: 10px;
+}
+.buyName span{
+    display: block;
+    line-height: 30px;
+    float: left;
+}
+.bigBuyPrice{
+    margin-top: 6px;
+    width: 456px;
+    height: 76px;
+    background-position: -5px -143px;
+    position: relative;
+}
+.bigBuyPrice dl{
+    display: block;
+    clear: both;
+    height: 30px;
+    float: left;
+}
+.bigBuyPrice dt{
+    text-indent: 15px;
+    padding-top: 10px;
+}
+.bigBuyPrice dt,.bigBuyPrice dd{
+    padding-top: 10px;
+    float: left;
+    line-height: 22px;
+    display: block;
+    font-size: 14px;
+    color: #606060;
+}
+.bigBuyPrice span{
+    line-height: 22px;
+}
+.weChatPrice{
+    font: bold 24px Arial;
+    margin-right: 3px;
+    color: #ff5900;
+}
+.spanBtn{
+    display: block;
+    position: relative;
+    top: 140px;
+    left: -124px;
+    width: 600px;
+}
+.addToCart{
+    position: relative;
+    margin: 10px 9px 0 172px;
+    display: block;
+    width: 162px;
+    height: 42px;
+    line-height: 42px;
+    text-align: center;
+    font-size: 18px;
+    color: #fff;
+    background: #ff5900;
+    color: #fff;
+    display: block;
+    text-decoration: none;
+}
+.addToCart:hover{
+    text-decoration: none;
+    outline: none;
+}

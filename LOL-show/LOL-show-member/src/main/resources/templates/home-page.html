@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <base th:href="@{/}">
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/clearDefault.css"/>
+    <link rel="stylesheet" type="text/css" href="css/mainNavBack.css"/>
+    <script type="text/javascript" src="js/autoChangePic.js"></script>
+    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+    <script>
+        // 为大图片设置单击响应函数
+        $(function () {
+           $("#inner").delegate(".innerbigImg","click",function () {
+                // 这里将跳转到英雄详情页面
+               window.location.href = "http://localhost/market/to/cart/"+this.id;
+           })
+
+        })
+    </script>
+</head>
+<body>
+<!--大div，背景图片-->
+<div id='mainNav'>
+    <!--顶栏-->
+    <div id="title" th:fragment="Toptitle">
+        <!--            侧边栏-->
+        <div id="min-content">
+            <ul class="ulContent">
+                <li><a class="content-a" th:href="@{http://localhost/}" href="/">主页</a></li>
+                <li><a class="content-a" href="#">作者博客</a></li>
+                <li><a class="content-a" href="#">敬请期待</a></li>
+            </ul>
+        </div>
+        <!--            用户信息-->
+        <div id="customer">
+            <div id="customerLine">
+                    <a th:if="${session.loginMember == null}" class="customer-a" href="/to/login/page">登录</a>
+                    <span th:if="${session.loginMember != null}" class="customer-a" th:text="${session.loginMember.roleName}">
+                        这里显示登陆用户的角色名称
+                    </span>
+
+                <a class="customer-a" href="to/regist/page">注册</a>
+                <a class="customer-a" href="to/member/home/page">个人主页</a>
+                <a class="customer-a" href="/quit/login/member">退出</a>
+            </div>
+        </div>
+        <!--            搜索框-->
+        <div id="search-content">
+            <form style="float: left" class="form-inline">
+                <div class="form-group">
+                    <input style="width: 400px;" type="text" class="form-control" id="exampleInputName2">
+                    <button class="btn btn-default" style="float: right;width: 44px;height: 42px;"><i class="glyphicon glyphicon-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--外层包裹-->
+    <div class="wrap">
+        <!--菜单导航-->
+        <div id="side-menu">
+            <ul id="menuUl">
+                <li class="menuLi"><a class="menu-a" href="main.html">首页</a></li>
+                <li class="menuLi"><a class="menu-a" href="http://localhost/market/to/market/home/page">商城</a></li>
+                <li class="menuLi"><a class="menu-a" href="http://localhost/hero/to/get/hero/page">英雄</a></li>
+            </ul>
+        </div>
+        <span class="tab-line-itn1"></span>
+        <!--            菜单详情-->
+        <div id="menuList" class="channel-menu">
+            <span><a href="#">社区</a></span>
+            <span><a href="#">留言</a></span>
+        </div>
+        <span class="tab-line-itn2"></span>
+        <div id="developing">
+            <span>销量热门</span>
+        </div>
+    </div>
+    <!--每日特惠-->
+    <div id="pictureBox">
+        <ul id="inner">
+            <!--                默认的实在第一张-->
+            <div th:if="${session.portalImgList == null}">抱歉，没有查询到任何数据</div>
+            <div th:if="${session.portalImgList != null}">
+                <li class="innerbigImg" th:each="hero : ${session.portalImgList}" th:id="${hero.id}"><img style="width: 980px;height: 500px" th:src="${hero.imgBig}" src="img/main/lol0.jpg">
+                </li>
+            </div>
+
+<!--            <li><img src="img/main/lol1.jpg"></li>-->
+<!--            <li><img src="img/main/lol2.jpg"></li>-->
+<!--            <li><img src="img/main/lol3.jpg"></li>-->
+<!--            <li><img src="img/main/lol4.jpg"></li>-->
+        </ul>
+        <div id="allA">
+            <a class="picBoxA" href="javascript:;" id = "0"></a>
+            <a class="picBoxA" href="javascript:;" id = "1"></a>
+            <a class="picBoxA" href="javascript:;" id = "2"></a>
+            <a class="picBoxA" href="javascript:;" id = "3"></a>
+            <a class="picBoxA" href="javascript:;" id = "4"></a>
+        </div>
+    </div>
+    <!--        购买以及查看更多-->
+    <div id="more">
+        <a href="#">
+            <span>更多...</span>
+        </a>
+    </div>
+</div>
+</body>
+
+</html>

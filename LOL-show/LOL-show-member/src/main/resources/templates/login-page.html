@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>登陆</title>
+</head>
+<base th:href="@{/}"/>
+<link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap-theme.min.css"/>
+<link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="css/clearDefault.css"/>
+<link rel="stylesheet" type="text/css" href="css/mainNavBack.css"/>
+<link rel="stylesheet" type="text/css" href="css/login.css"/>
+
+<body>
+<div id="title" th:replace="home-page :: #title">
+</div>
+
+<!--头部装饰栏-->
+<div id="top-banner"></div>
+<!--登陆装饰栏-->
+<div class="title-line">
+    <span class="tit" style="font-size: 35px;font-family: 'JetBrains Mono'">登录</span>
+</div>
+
+<div id="loginBox">
+    <!--    二维码登陆功能-->
+    <div id="loginLeft">
+        <span>二维码登录功能敬请期待！</span>
+    </div>
+    <!--    分割线-->
+    <div class="line"></div>
+    <!--    -->
+    <div id="loginRight">
+        <div id="form-login">
+            <form action="/do/member/login" method="post">
+                <p style="margin: 10px auto;color: red" th:text="${session.exception}"></p>
+                <div class="form-group">
+                    <input name="userName" class="form-control" type="text" id="username" placeholder="用户名"/>
+                </div>
+                <input name="password" class="form-control" type="password" id="password" placeholder="密码"/>
+                <button id="loginBtn" class="btn btn-default">登陆</button>
+                <button id="registBtn" class="btn btn-default">注册</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

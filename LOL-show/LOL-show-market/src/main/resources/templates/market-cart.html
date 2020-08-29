@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>添加</title>
+    <base th:href="@{/}"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/clearDefault.css"/>
+    <link rel="stylesheet" type="text/css" href="css/mainNavBack.css"/>
+    <link rel="stylesheet" type="text/css" href="css/market.css"/>
+    <link rel="stylesheet" type="text/css" href="css/purchaseDetail.css"/>
+</head>
+<body>
+<!--大div，背景图片-->
+<div id='mainMarket'>
+    <div id="title" th:replace="include-title :: #title">
+        <!--            侧边栏-->
+        <div id="min-content">
+            <ul class="ulContent">
+                <li><a class="content-a" href="main.html">主页</a></li>
+                <li><a class="content-a" href="#">直播</a> </li>
+                <li><a class="content-a" href="#">赛事</a></li>
+                <li><a class="content-a" href="#">打赏</a></li>
+                <li><a class="content-a" href="#">敬请期待</a></li>
+            </ul>
+        </div>
+        <!--            用户信息-->
+        <div id="customer">
+            <div id="customerLine">
+                <a class="customer-a" href="login.html">登录</a>
+                <a class="customer-a" href="regist.html">注册</a>
+                <a class="customer-a" href="#">个人主页</a>
+                <a class="customer-a" href="#">退出</a>
+            </div>
+        </div>
+        <!--            搜索框-->
+        <div id="search-content">
+            <form class="title-form">
+                <input type="text"/>
+                <div id="searchBtn">
+                    <!--                    搜索按钮-->
+                    <button type="button"><img src="img/main/searchBtn.png"/></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--    导航栏-->
+    <div class="marketNav" th:replace="market-home :: #marketNav">
+        <!--        logo-->
+        <div class="storeNav">
+            <!--            商品ul-->
+            <div class="storeUl">
+                <ul>
+                    <li><a href="#">商品列表</a></li>
+                    <li><a href="#">活动专区</a></li>
+                    <li><a href="#">个人中心</a></li>
+                </ul>
+            </div>
+            <!--购物车-->
+            <div class="marketCart">
+                <a href="shopCart.html" class="btn-cart-a" title="购物车">
+                    <i id="cartNum">(0)</i>
+                    <s class="cartIco"></s>
+                    购物车
+                </a>
+            </div>
+        </div>
+        <!--        子导航栏-->
+        <div class="subNav">
+            <ul class="subUl">
+                <li><a href="#">英雄</a></li>
+                <li><a href="#">表情</a></li>
+                <li><a href="#">其他</a></li>
+            </ul>
+        </div>
+    </div>
+    <!--主要内容-->
+    <div class="marketContent">
+        <!--        侧边栏-->
+        <div class="marketSideBar" th:replace="market-home :: #marketSideBar">
+            <h3>
+                热门排行
+                <span class="green-line"></span>
+            </h3>
+            <ul class="hotRank">
+                <li>
+                    <a href="#" class="rank-link">
+                        <div class="icoRank comIco">01</div>
+                        <div class="djimg">
+                            <img src="img/scot/scotPic01.jpg" width="76" height="76" alt="猩红之月 烬"/>
+                        </div>
+                        <div class="djinfo fr">
+                            <p class="djname">腥红之月 烬</p>
+                            <p class="djprice">Q币价：79.00 Q币</p>
+                            <p class="djcpri" style="font-size:12px;">微信价：<strong>￥76.63 </strong></p>
+                        </div>
+                    </a>
+
+                </li>
+                <li>
+                    <a href="#" class="rank-link">
+                        <div class="icoRank comIco">02</div>
+                        <div class="djimg">
+                            <img src="../static/img/scot/scotPic02.jpg" width="76" height="76" alt="屠龙勇士 赵信"/>
+                        </div>
+                        <div class="djinfo fr">
+                            <p class="djname">屠龙勇士 赵信</p>
+                            <p class="djprice">Q币价：79.00 Q币</p>
+                            <p class="djcpri" style="font-size:12px;">微信价：<strong>￥76.63 </strong></p>
+                        </div>
+                    </a>
+
+                </li>
+                <li>
+                    <a href="#" class="rank-link">
+                        <div class="icoRank comIco">03</div>
+                        <div class="djimg">
+                            <img src="../static/img/scot/scotPic03.jpg" width="76" height="76" alt="死亡绽放 螳螂"/>
+                        </div>
+                        <div class="djinfo fr">
+                            <p class="djname">死亡绽放 螳螂</p>
+                            <p class="djprice">Q币价：69.00 Q币</p>
+                            <p class="djcpri" style="font-size:12px;">微信价：<strong>￥66.93 </strong></p>
+                        </div>
+                    </a>
+
+                </li>
+                <li>
+                    <a href="#" class="rank-link">
+                        <div class="icoRank comIco">04</div>
+                        <div class="djimg">
+                            <img src="../static/img/scot/scotPic04.jpg" width="76" height="76" alt="泳池派对 德莱文"/>
+                        </div>
+                        <div class="djinfo fr">
+                            <p class="djname">泳池派对 德莱文</p>
+                            <p class="djprice">Q币价：49.50 Q币</p>
+                            <p class="djcpri" style="font-size:12px;">微信价：<strong>￥48.01 </strong></p>
+                        </div>
+                    </a>
+
+                </li>
+                <li>
+                    <a href="#" class="rank-link">
+                        <div class="icoRank comIco">05</div>
+                        <div class="djimg">
+                            <img src="../static/img/scot/scotPic05.jpg" width="76" height="76" alt="源计划 联合"/>
+                        </div>
+                        <div class="djinfo fr">
+                            <p class="djname">源计划 联合</p>
+                            <p class="djprice">Q币价：99.00 Q币</p>
+                            <p class="djcpri" style="font-size:12px;">微信价：<strong>￥96.03 </strong></p>
+                        </div>
+                    </a>
+
+                </li>
+                <li>
+                    <a href="#" class="rank-link">
+                        <div class="icoRank comIco">06</div>
+                        <div class="djimg">
+                            <img src="../static/img/scot/scotPic06.jpg" width="76" height="76" alt="灌篮高手 联合"/>
+                        </div>
+                        <div class="djinfo fr">
+                            <p class="djname">灌篮高手 联合</p>
+                            <p class="djprice">Q币价：69.00 Q币</p>
+                            <p class="djcpri" style="font-size:12px;">微信价：<strong>￥66.93 </strong></p>
+                        </div>
+                    </a>
+
+                </li>
+                <li>
+                    <a href="#" class="rank-link">
+                        <div class="icoRank comIco">07</div>
+                        <div class="djimg">
+                            <img src="../static/img/scot/scotPic07.jpg" width="76" height="76" alt="驯龙女巫 婕拉"/>
+                        </div>
+                        <div class="djinfo fr">
+                            <p class="djname">驯龙女巫 婕拉</p>
+                            <p class="djprice">Q币价：79.00 Q币</p>
+                            <p class="djcpri" style="font-size:12px;">微信价：<strong>￥76.63 </strong></p>
+                        </div>
+                    </a>
+
+                </li>
+                <li>
+                    <a href="#" class="rank-link">
+                        <div class="icoRank comIco">08</div>
+                        <div class="djimg">
+                            <img src="../static/img/scot/scotPic08.jpg" width="76" height="76" alt="原计划： 雷 卢锡安"/>
+                        </div>
+                        <div class="djinfo fr">
+                            <p class="djname">原计划： 雷 卢锡安</p>
+                            <p class="djprice">Q币价：79.00 Q币</p>
+                            <p class="djcpri" style="font-size:12px;">微信价：<strong>￥76.63 </strong></p>
+                        </div>
+                    </a>
+
+                </li>
+                <li>
+                    <a href="#" class="rank-link">
+                        <div class="icoRank comIco">09</div>
+                        <div class="djimg">
+                            <img src="../static/img/scot/scotPic09.jpg" width="76" height="76" alt="猩红之月 亚索"/>
+                        </div>
+                        <div class="djinfo fr">
+                            <p class="djname">猩红之月 亚索</p>
+                            <p class="djprice">Q币价：79.00 Q币</p>
+                            <p class="djcpri" style="font-size:12px;">微信价：<strong>￥76.63 </strong></p>
+                        </div>
+                    </a>
+
+                </li>
+                </li>
+                <li>
+                    <a href="#" class="rank-link">
+                        <div class="icoRank comIco">10</div>
+                        <div class="djimg">
+                            <img src="../static/img/scot/scotPic10.jpg" width="76" height="76" alt="泳池派对 璐璐"/>
+                        </div>
+                        <div class="djinfo fr">
+                            <p class="djname">泳池派对 璐璐</p>
+                            <p class="djprice">Q币价：49.50 Q币</p>
+                            <p class="djcpri" style="font-size:12px;">微信价：<strong>￥48.01 </strong></p>
+                        </div>
+                    </a>
+
+                </li>
+            </ul>
+        </div>
+        <div class="purchaseDetail">
+            <div th:if="cartHeroVO == null" th:text="cartException">这里显示异常信息</div>
+            <div th:text="${session.addCartException}">这里显示异常信息</div>
+            <div th:if="cartHeroVO != null">
+                <div class="detailInfoBox">
+                    <div class="detailImg">
+                        <div class="bigImg">
+                            <img th:src="${cartHeroVO.imgCart}" src="img/scot/bigImg.jpg"/>
+                        </div>
+                    </div>
+                    <div class="buyBox">
+                        <h2 class="buyName">
+                            <span th:text="${cartHeroVO.fullName}+' '+${cartHeroVO.nickName}">腕豪 瑟提</span>
+                        </h2>
+                        <div class="bigBuyPrice">
+                            <dl>
+                                <dt>LB价:</dt>
+                                <dd>
+                                    <span th:text="${cartHeroVO.price}">&nbsp;45</span>
+                                    <span>&nbsp;LB</span>
+                                </dd>
+                            </dl>
+                            <dl class="lastData">
+                                <dt>期限:</dt>
+                                <dd>永久</dd>
+                            </dl>
+                            <span class="spanBtn">
+                                <a th:href="'http://localhost/order/save/order/to/cart/'+${cartHeroVO.id}" class="addToCart" title="加入购物车">
+                                    加入购物车
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

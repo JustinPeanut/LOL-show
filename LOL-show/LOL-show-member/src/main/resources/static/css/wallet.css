@@ -1,0 +1,64 @@
+.walletContent{
+    position: relative;
+    left: 148px;
+    width: 820px;
+}
+#walletTitleIco{
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    position: relative;
+    left: -140px;
+}
+#walletTitleIco img{
+    position: relative;
+    left: -140px;
+    top: -10px;
+}
+.walletTitle{
+    height: 50px;
+    border-bottom: 1px solid #ddd;
+}
+.walletTitle span{
+    font-family: "JetBrains Mono";
+    font-size: 25px;
+    position: relative;
+    left: -80px;
+    top: -36px;
+}
+
+.walletMainTitle{
+    margin-top: 10px;
+    margin-bottom: 13px;
+    font-size: 14px;
+    color: #99a2aa;
+    letter-spacing: 0;
+}
+h3{
+    display: inline-block;
+    font-size: 50px;
+    color: #01b5e7;
+}
+.walletMain span{
+    display: inline-block;
+    font-size: 16px;
+    margin-left: 4px;
+    color: #01b5e7;
+}
+.walletMain a{
+    text-decoration: none;
+    width: 140px;
+    height: 45px;
+    float: right;
+    background: #02a7e3;
+    border-radius: 4px;
+    font-size: 18px;
+    line-height: 45px;
+    text-align: center;
+    color: #fff;
+    letter-spacing: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

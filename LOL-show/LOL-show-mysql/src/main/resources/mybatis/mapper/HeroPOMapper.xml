@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.peanut.mapper.HeroPOMapper" >
+  <resultMap id="BaseResultMap" type="com.peanut.entity.po.HeroPO" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="full_name" property="fullName" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="hero_type_id" property="heroTypeId" jdbcType="VARCHAR" />
+    <result column="img_small" property="imgSmall" jdbcType="VARCHAR" />
+    <result column="img_big" property="imgBig" jdbcType="VARCHAR" />
+    <result column="img_scot" property="imgScot" jdbcType="VARCHAR" />
+    <result column="img_stick" property="imgStick" jdbcType="VARCHAR" />
+    <result column="img_cart" property="imgCart" jdbcType="VARCHAR" />
+    <result column="purchase_num" property="purchaseNum" jdbcType="INTEGER" />
+    <result column="text2" property="text2" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.peanut.entity.po.HeroPO" extends="BaseResultMap" >
+    <result column="back_story" property="backStory" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, full_name, nick_name, price, hero_type_id, img_small, img_big, img_scot, img_stick, 
+    img_cart, purchase_num, text2
+  </sql>
+  <sql id="Blob_Column_List" >
+    back_story
+  </sql>
+
+  <select id="getHeroOwnByMemberId" resultType="com.peanut.entity.vo.HeroMemberOwnVO">
+    select
+lol_hero.id id,
+full_name fullName,
+nick_name nickName,
+img_stick imgStick
+from lol_hero
+left
+join lol_member_own_hero on lol_member_own_hero.hero_id = lol_hero.id where lol_member_own_hero.member_id = #{id}
+  </select>
+
+  <select id="selectOrderHero" resultType="com.peanut.entity.po.HeroPO">
+    select
+    id,
+    full_name fullName,
+    nick_name nickName,
+    price,
+    img_scot imgScot
+    from lol_hero
+    where id = #{heroId}
+  </select>
+
+  <select id="selectStickHeroByConition" resultType="com.peanut.entity.po.HeroPO">
+    select
+    id,
+    full_name fullName,
+    nick_name nickName,
+    price,
+    img_stick imgStick
+    from lol_hero
+    where  price between #{lowPrice} and #{highPrice}  and (full_name like  concat("%",#{keyword},"%") or nick_name like concat("%",#{keyword},"%"))
+  </select>
+
+  <select id="selectStickHeroByConditionAtType" resultType="com.peanut.entity.po.HeroPO">
+    select
+    id,
+    full_name fullName,
+    nick_name nickName,
+    price,
+    img_stick imgStick
+    from lol_hero
+    where  price between #{lowPrice} and #{highPrice} and hero_type_id = #{typeId} and (full_name like  concat("%",#{keyword},"%") or nick_name like concat("%",#{keyword},"%"))
+  </select>
+
+  <select id="selectHeroByPrefixLetterAndType" resultType="com.peanut.entity.po.HeroPO">
+    SELECT
+    id,
+    full_name fullName,
+    nick_name nickName,
+    price,
+    img_stick imgStick,
+
+    ELT(INTERVAL(CONV(HEX(LEFT(CONVERT(full_name USING gbk),1)),16,10),
+
+    0xB0A1,0xB0C5,0xB2C1,0xB4EE,0xB6EA,0xB7A2,0xB8C1,0xB9FE,0xBBF7,
+
+    0xBFA6,0xC0AC,0xC2E8,0xC4C3,0xC5B6,0xC5BE,0xC6DA,0xC8BB,0xC8F6,
+
+    0xCBFA,0xCDDA,0xCEF4,0xD1B9,0xD4D1),
+
+    'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P',
+
+    'Q','R','S','T','W','X','Y','Z') AS PY
+
+    FROM lol_hero WHERE ELT(INTERVAL(CONV(HEX(LEFT(CONVERT(full_name USING gbk),1)),16,10),
+
+    0xB0A1,0xB0C5,0xB2C1,0xB4EE,0xB6EA,0xB7A2,0xB8C1,0xB9FE,0xBBF7,
+
+    0xBFA6,0xC0AC,0xC2E8,0xC4C3,0xC5B6,0xC5BE,0xC6DA,0xC8BB,0xC8F6,
+
+    0xCBFA,0xCDDA,0xCEF4,0xD1B9,0xD4D1),
+
+    'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P',
+
+    'Q','R','S','T','W','X','Y','Z') = #{prefixLetter} and hero_type_id = #{typeId}
+  </select>
+
+  <select id="selectHeroByPrefixLetter" resultType="com.peanut.entity.po.HeroPO">
+    SELECT
+    id,
+    full_name fullName,
+    nick_name nickName,
+    price,
+    img_stick imgStick,
+
+    ELT(INTERVAL(CONV(HEX(LEFT(CONVERT(full_name USING gbk),1)),16,10),
+
+    0xB0A1,0xB0C5,0xB2C1,0xB4EE,0xB6EA,0xB7A2,0xB8C1,0xB9FE,0xBBF7,
+
+    0xBFA6,0xC0AC,0xC2E8,0xC4C3,0xC5B6,0xC5BE,0xC6DA,0xC8BB,0xC8F6,
+
+    0xCBFA,0xCDDA,0xCEF4,0xD1B9,0xD4D1),
+
+    'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P',
+
+    'Q','R','S','T','W','X','Y','Z') AS PY
+
+    FROM lol_hero WHERE ELT(INTERVAL(CONV(HEX(LEFT(CONVERT(full_name USING gbk),1)),16,10),
+
+    0xB0A1,0xB0C5,0xB2C1,0xB4EE,0xB6EA,0xB7A2,0xB8C1,0xB9FE,0xBBF7,
+
+    0xBFA6,0xC0AC,0xC2E8,0xC4C3,0xC5B6,0xC5BE,0xC6DA,0xC8BB,0xC8F6,
+
+    0xCBFA,0xCDDA,0xCEF4,0xD1B9,0xD4D1),
+
+    'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P',
+
+    'Q','R','S','T','W','X','Y','Z') = #{prefixLetter}
+  </select>
+
+  <select id="getStickHeroByType" resultType="com.peanut.entity.po.HeroPO">
+    select
+    id,
+    full_name fullName,
+    nick_name nickName,
+    price,
+    img_stick imgStick
+    from lol_hero
+    where hero_type_id = #{typeId}
+  </select>
+
+  <select id="selectAllStickHero" resultType="com.peanut.entity.po.HeroPO">
+    select
+    id,
+    full_name fullName,
+    nick_name nickName,
+    price,
+    img_stick imgStick
+    from lol_hero
+  </select>
+
+  <select id="selectScotHero" resultType="com.peanut.entity.po.HeroPO">
+        select
+        id,
+        full_name fullName,
+        nick_name nickName,
+        price,
+        img_scot imgScot
+        from lol_hero order by purchase_num desc
+  </select>
+
+  <select id="getHeroDetail" resultType="com.peanut.entity.vo.HeroDetailVO">
+select
+lol_hero.id id,
+img_big imgBig,
+full_name fullName,
+nick_name nickName,
+back_story backStory,
+type
+from lol_hero
+left join
+lol_hero_type
+on lol_hero.hero_type_id = lol_hero_type.id
+where lol_hero.id = #{id}
+  </select>
+  <select id="selectByName" resultType="com.peanut.entity.po.HeroPO">
+    select
+    id,
+    full_name fullName,
+    img_small imgSmall
+    from lol_hero
+    where full_name like "%${name}%" or nick_name like "%${name}%"
+  </select>
+
+  <select id="selectAll" resultType="com.peanut.entity.po.HeroPO">
+    select
+    id,
+    full_name fullName,
+    img_small imgSmall
+    from lol_hero
+
+  </select>
+  <select id="selectBigImgDesc" resultType="com.peanut.entity.po.HeroPO">
+    select
+    id,
+    img_big imgBig
+    from lol_hero order by purchase_num desc
+  </select>
+
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.peanut.entity.po.HeroPOExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from lol_hero
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.peanut.entity.po.HeroPOExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from lol_hero
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from lol_hero
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from lol_hero
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.peanut.entity.po.HeroPOExample" >
+    delete from lol_hero
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.peanut.entity.po.HeroPO" >
+    insert into lol_hero (id, full_name, nick_name, 
+      price, hero_type_id, img_small, 
+      img_big, img_scot, img_stick, 
+      img_cart, purchase_num, text2, 
+      back_story)
+    values (#{id,jdbcType=INTEGER}, #{fullName,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, 
+      #{price,jdbcType=DOUBLE}, #{heroTypeId,jdbcType=VARCHAR}, #{imgSmall,jdbcType=VARCHAR}, 
+      #{imgBig,jdbcType=VARCHAR}, #{imgScot,jdbcType=VARCHAR}, #{imgStick,jdbcType=VARCHAR}, 
+      #{imgCart,jdbcType=VARCHAR}, #{purchaseNum,jdbcType=INTEGER}, #{text2,jdbcType=VARCHAR}, 
+      #{backStory,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.peanut.entity.po.HeroPO" >
+    insert into lol_hero
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fullName != null" >
+        full_name,
+      </if>
+      <if test="nickName != null" >
+        nick_name,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="heroTypeId != null" >
+        hero_type_id,
+      </if>
+      <if test="imgSmall != null" >
+        img_small,
+      </if>
+      <if test="imgBig != null" >
+        img_big,
+      </if>
+      <if test="imgScot != null" >
+        img_scot,
+      </if>
+      <if test="imgStick != null" >
+        img_stick,
+      </if>
+      <if test="imgCart != null" >
+        img_cart,
+      </if>
+      <if test="purchaseNum != null" >
+        purchase_num,
+      </if>
+      <if test="text2 != null" >
+        text2,
+      </if>
+      <if test="backStory != null" >
+        back_story,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="fullName != null" >
+        #{fullName,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="heroTypeId != null" >
+        #{heroTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="imgSmall != null" >
+        #{imgSmall,jdbcType=VARCHAR},
+      </if>
+      <if test="imgBig != null" >
+        #{imgBig,jdbcType=VARCHAR},
+      </if>
+      <if test="imgScot != null" >
+        #{imgScot,jdbcType=VARCHAR},
+      </if>
+      <if test="imgStick != null" >
+        #{imgStick,jdbcType=VARCHAR},
+      </if>
+      <if test="imgCart != null" >
+        #{imgCart,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseNum != null" >
+        #{purchaseNum,jdbcType=INTEGER},
+      </if>
+      <if test="text2 != null" >
+        #{text2,jdbcType=VARCHAR},
+      </if>
+      <if test="backStory != null" >
+        #{backStory,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.peanut.entity.po.HeroPOExample" resultType="java.lang.Integer" >
+    select count(*) from lol_hero
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update lol_hero
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.fullName != null" >
+        full_name = #{record.fullName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.nickName != null" >
+        nick_name = #{record.nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.price != null" >
+        price = #{record.price,jdbcType=DOUBLE},
+      </if>
+      <if test="record.heroTypeId != null" >
+        hero_type_id = #{record.heroTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imgSmall != null" >
+        img_small = #{record.imgSmall,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imgBig != null" >
+        img_big = #{record.imgBig,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imgScot != null" >
+        img_scot = #{record.imgScot,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imgStick != null" >
+        img_stick = #{record.imgStick,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imgCart != null" >
+        img_cart = #{record.imgCart,jdbcType=VARCHAR},
+      </if>
+      <if test="record.purchaseNum != null" >
+        purchase_num = #{record.purchaseNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.text2 != null" >
+        text2 = #{record.text2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.backStory != null" >
+        back_story = #{record.backStory,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update lol_hero
+    set id = #{record.id,jdbcType=INTEGER},
+      full_name = #{record.fullName,jdbcType=VARCHAR},
+      nick_name = #{record.nickName,jdbcType=VARCHAR},
+      price = #{record.price,jdbcType=DOUBLE},
+      hero_type_id = #{record.heroTypeId,jdbcType=VARCHAR},
+      img_small = #{record.imgSmall,jdbcType=VARCHAR},
+      img_big = #{record.imgBig,jdbcType=VARCHAR},
+      img_scot = #{record.imgScot,jdbcType=VARCHAR},
+      img_stick = #{record.imgStick,jdbcType=VARCHAR},
+      img_cart = #{record.imgCart,jdbcType=VARCHAR},
+      purchase_num = #{record.purchaseNum,jdbcType=INTEGER},
+      text2 = #{record.text2,jdbcType=VARCHAR},
+      back_story = #{record.backStory,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update lol_hero
+    set id = #{record.id,jdbcType=INTEGER},
+      full_name = #{record.fullName,jdbcType=VARCHAR},
+      nick_name = #{record.nickName,jdbcType=VARCHAR},
+      price = #{record.price,jdbcType=DOUBLE},
+      hero_type_id = #{record.heroTypeId,jdbcType=VARCHAR},
+      img_small = #{record.imgSmall,jdbcType=VARCHAR},
+      img_big = #{record.imgBig,jdbcType=VARCHAR},
+      img_scot = #{record.imgScot,jdbcType=VARCHAR},
+      img_stick = #{record.imgStick,jdbcType=VARCHAR},
+      img_cart = #{record.imgCart,jdbcType=VARCHAR},
+      purchase_num = #{record.purchaseNum,jdbcType=INTEGER},
+      text2 = #{record.text2,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.peanut.entity.po.HeroPO" >
+    update lol_hero
+    <set >
+      <if test="fullName != null" >
+        full_name = #{fullName,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="heroTypeId != null" >
+        hero_type_id = #{heroTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="imgSmall != null" >
+        img_small = #{imgSmall,jdbcType=VARCHAR},
+      </if>
+      <if test="imgBig != null" >
+        img_big = #{imgBig,jdbcType=VARCHAR},
+      </if>
+      <if test="imgScot != null" >
+        img_scot = #{imgScot,jdbcType=VARCHAR},
+      </if>
+      <if test="imgStick != null" >
+        img_stick = #{imgStick,jdbcType=VARCHAR},
+      </if>
+      <if test="imgCart != null" >
+        img_cart = #{imgCart,jdbcType=VARCHAR},
+      </if>
+      <if test="purchaseNum != null" >
+        purchase_num = #{purchaseNum,jdbcType=INTEGER},
+      </if>
+      <if test="text2 != null" >
+        text2 = #{text2,jdbcType=VARCHAR},
+      </if>
+      <if test="backStory != null" >
+        back_story = #{backStory,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.peanut.entity.po.HeroPO" >
+    update lol_hero
+    set full_name = #{fullName,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      hero_type_id = #{heroTypeId,jdbcType=VARCHAR},
+      img_small = #{imgSmall,jdbcType=VARCHAR},
+      img_big = #{imgBig,jdbcType=VARCHAR},
+      img_scot = #{imgScot,jdbcType=VARCHAR},
+      img_stick = #{imgStick,jdbcType=VARCHAR},
+      img_cart = #{imgCart,jdbcType=VARCHAR},
+      purchase_num = #{purchaseNum,jdbcType=INTEGER},
+      text2 = #{text2,jdbcType=VARCHAR},
+      back_story = #{backStory,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.peanut.entity.po.HeroPO" >
+    update lol_hero
+    set full_name = #{fullName,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      hero_type_id = #{heroTypeId,jdbcType=VARCHAR},
+      img_small = #{imgSmall,jdbcType=VARCHAR},
+      img_big = #{imgBig,jdbcType=VARCHAR},
+      img_scot = #{imgScot,jdbcType=VARCHAR},
+      img_stick = #{imgStick,jdbcType=VARCHAR},
+      img_cart = #{imgCart,jdbcType=VARCHAR},
+      purchase_num = #{purchaseNum,jdbcType=INTEGER},
+      text2 = #{text2,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

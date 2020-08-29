@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>我的英雄</title>
+    <base th:href="@{/}"/>
+    <link rel="stylesheet" type="text/css" href="css/clearDefault.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/login.css"/>
+    <link rel="stylesheet" type="text/css" href="css/home.css"/>
+    <link rel="stylesheet" type="text/css" href="css/plan.css"/>
+    <link rel="stylesheet" type="text/css" href="css/mainNavBack.css"/>
+    <link rel="stylesheet" type="text/css" href="css/market.css"/>
+</head>
+<body>
+<div id="title" th:replace="home-page :: #title">
+    <!--            侧边栏-->
+    <div id="min-content">
+        <ul class="ulContent">
+            <li><a class="content-a" href="main.html">主页</a></li>
+            <li><a class="content-a" href="#">直播</a> </li>
+            <li><a class="content-a" href="#">赛事</a></li>
+            <li><a class="content-a" href="#">打赏</a></li>
+            <li><a class="content-a" href="#">敬请期待</a></li>
+        </ul>
+    </div>
+    <!--            用户信息-->
+    <div id="customer">
+        <div id="customerLine">
+            <a class="customer-a" href="login.html">登录</a>
+            <a class="customer-a" href="regist.html">注册</a>
+            <a class="customer-a" href="#">个人主页</a>
+            <a class="customer-a" href="#">退出</a>
+        </div>
+    </div>
+    <!--            搜索框-->
+    <div id="search-content">
+        <form style="float: left" class="form-inline">
+            <div class="form-group">
+                <input style="width: 400px;" type="text" class="form-control" id="exampleInputName2">
+                <button class="btn btn-default" style="float: right;width: 44px;height: 42px;"><i class="glyphicon glyphicon-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--头部装饰栏-->
+<div id="top-banner"></div>
+
+
+<div id="userMainContent">
+    <!--左侧导航栏-->
+    <div class="leftContent">
+        <div class="userTitle">
+            <span>个人中心</span>
+        </div>
+        <div class="userTitle">
+            <ul>
+                <li><span><a href="to/member/home/page">首页</a></span></li>
+                <li><span><a href="to/member/plan/page">今日计划</a></span></li>
+                <li><span><a href="to/update/member/info/page">我的信息</a></span></li>
+                <li class="activeLi"><span><a href="to/member/hero/page">我的英雄</a></span></li>
+                <li><span><a href="http://localhost/order/to/hero/submit/page">我的订单</a></span></spqn></li>
+                <li><span><a href="to/member/wallet">我的钱包</a></span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="centerPlanContent">
+        <div class="listBox">
+            <div th:if="${heroList == null}"><p>您还未拥有任何英雄，快去商城看看吧！</p></div>
+            <div th:if="${not #strings.isEmpty(heroList)}">
+                <dl th:each="hero : ${heroList}">
+                    <dt>
+                        <a href="javascript:;"><img th:src="${hero.imgStick}" src="img/scot/listBox01.jpg" width="116" height="212" alt="傲之追猎者 雷恩加尔"/></a>
+                    </dt>
+                    <dd>
+                        <a href="javascript:;" class="djname">
+                            <strong th:text="${hero.fullName}+' '+${hero.nickName}">傲之追猎者 雷恩加尔</strong>
+                        </a>
+                        <div class="purchaseDiv">
+                            <a href="javascript:;" class="buyNow">符文选择</a>
+                        </div>
+                        <div class="purchaseDiv">
+                            <a href="javascript:;" class="buyNow">装备选择</a>
+                        </div>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

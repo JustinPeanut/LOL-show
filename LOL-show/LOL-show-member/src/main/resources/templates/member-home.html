@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>个人主页</title>
+    <base th:href="@{/}"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/mainNavBack.css"/>
+    <link rel="stylesheet" type="text/css" href="css/clearDefault.css"/>
+    <link rel="stylesheet" type="text/css" href="css/login.css"/>
+    <link rel="stylesheet" type="text/css" href="css/home.css">
+</head>
+<body>
+<div id="title" th:replace="home-page :: #title">
+</div>
+<!--头部装饰栏-->
+<div id="top-banner"></div>
+
+
+<div id="userMainContent">
+    <!--左侧导航栏-->
+    <div id="leftContent" class="leftContent" th:fragment="leftContent">
+        <div class="userTitle">
+            <span>个人中心</span>
+        </div>
+        <div class="userTitle">
+            <ul>
+                <li class="activeLi"><span><a href="to/member/home/page">首页</a></span></li>
+                <li><span><a href="to/member/plan/page">今日计划</a></span></li>
+                <li><span><a href="to/update/member/info/page">我的信息</a></span></li>
+                <li><span><a href="to/member/hero/page">我的英雄</a></span></li>
+                <li><span><a href="http://localhost/order/to/hero/submit/page">我的订单</a></span></spqn></li>
+                <li><span><a href="to/member/wallet">我的钱包</a></span></li>
+            </ul>
+        </div>
+
+    </div>
+    <!--    主要内容-->
+    <div class="content">
+        <!--        基本信息-->
+        <div class="information">
+            <!--            头像-->
+            <div id="headPic">
+                <span>
+                    <img src="img/userMain/headerPic.png"/>
+                </span>
+            </div>
+            <!--用户名-->
+            <div id="username">
+                <p>用户名</p>
+                <span th:text="${session.loginMember.roleName}">Peanut</span>
+            </div>
+            <!--            年龄-->
+            <div id="age">
+                <p>年龄</p>
+                <span th:text="${session.loginMember.age}+'岁'">18岁</span>
+            </div>
+            <!--修改资料按钮-->
+            <div id="editInformation">
+                <span><a class="home-to-update" href="to/update/member/info/page">修改资料</a></span>
+            </div>
+            <!--            分割线-->
+            <div id="informationLine"></div>
+            <!--            备注-->
+            <div class="informationTip">
+                <span></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

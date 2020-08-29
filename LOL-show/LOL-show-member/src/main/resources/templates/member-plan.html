@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>我的计划</title>
+    <base th:href="@{/}"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/mainNavBack.css"/>
+    <link rel="stylesheet" type="text/css" href="css/clearDefault.css"/>
+    <link rel="stylesheet" type="text/css" href="css/login.css"/>
+    <link rel="stylesheet" type="text/css" href="css/home.css"/>
+    <link rel="stylesheet" type="text/css" href="css/plan.css"/>
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap/bootstrap-min.js"></script>
+    <script type="text/javascript" src="layer/layer.js"></script>
+    <script type="text/javascript" src="js/member-plan.js"></script>
+    <script type="text/javascript" src="layui/layui.js"></script>
+    <style type="text/css">
+        #addPlanModal input,#updateModal input{
+            width: 191px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function(){
+            // 初始化刚开始到达我的计划页面的页码
+            window.pageNum = 1;
+            // 当pageSize等于0的时候，相当于查询出所有的结果，这里就是要查出所有的结果
+            window.pageSize = 0;
+            init("member/get/page/info.json",4);
+            // 设置一个属性，用来保存上一个显示的页码数
+            // 当pageNum改变的时候，prePageNum就会有作用
+            window.prePageNum = window.pageNum;
+            // 初始完成之后，将pageSize设置成4
+            window.pageSize = 4;
+            createTable();
+
+            // 单条删除，为单挑删除设置单机响应函数
+            $("table").delegate('.removeBtn','click',function () {
+                // 开启模态框
+                $("#removeModal").modal("show");
+                let parentNode = this.parentNode;
+                let tr = parentNode.parentNode;
+                let td = tr.children[2];
+                let event = $(td).html();
+                $("#event").html(event);
+                let idTd = tr.children[0];
+                window.planId = $(idTd).html();
+
+            });
+
+            // 为模态框中的删除按钮添加单机响应函数
+            $("#removeRequest").click(function () {
+                $.ajax({
+                    "url": "remove/member/plan.json",
+                    "type": "post",
+                    "data": {
+                        "id": window.planId
+                    },
+                    "dataType": "json",
+                    "success": function (result) {
+                        layer.msg("操作成功！");
+                        // 当pageSize等于0的时候，相当于查询出所有的结果，这里就是要查出所有的结果
+                        window.pageSize = 0;
+                        init("member/get/page/info.json",4);
+                        if(window.pageTotalNum < window.pageNum){
+                            window.pageNum -= 1;
+                        }
+                        // 设置一个属性，用来保存上一个显示的页码数
+                        // 当pageNum改变的时候，prePageNum就会有作用
+                        // 初始完成之后，将pageSize设置成4
+                        window.pageSize = 4;
+                        createTable();
+                        window.prePageNum = window.pageNum;
+                    },
+                    "error": function (result) {
+                        layer.msg("操作失败！"+result.message);
+                    }
+                });
+                // 关闭模态框
+                $("#removeModal").modal("hide");
+            });
+
+            // 为添加计划按钮绑定单击响应函数
+            $("#addPlanBtn").click(function () {
+                $("#addPlanModal").modal("show");
+            });
+
+            // 添加日期插件
+            layui.use('laydate',function () {
+                var laydate = layui.laydate;
+                //执行一个laydate实例
+                laydate.render({
+                    elem: '#dateText', //指定元素
+                });
+            });
+            layui.use('laydate',function () {
+                var laydate1 = layui.laydate;
+                //执行一个laydate实例
+                laydate1.render({
+                    elem: '#updateDateText' //指定元素
+                });
+            });
+
+            // 为添加计划模态框的添加按钮绑定单击响应函数
+            $("#addPlanRequest").click(function () {
+                // 获取要保存的计划
+                let date = $("#dateText").val();
+                let event = $("#eventInput").val();
+                let lastTime = $("#lastTime").val();
+                // 发送ajax请求，添加计划
+                // 封装要发送的数据
+                let planData = {
+                    "planDate": date,
+                    "planEvent": event,
+                    "lastTime": lastTime
+                };
+                let data = JSON.stringify(planData);
+                $.ajax({
+                    "url": "add/member/plan.json",
+                    "type": "post",
+                    "contentType": "application/json",
+                    "dataType": "json",
+                    "data": data,
+                    "success": function (result) {
+                        layer.msg("操作成功！");
+                        // 当pageSize等于0的时候，相当于查询出所有的结果，这里就是要查出所有的结果
+                        window.pageSize = 0;
+                        init("member/get/page/info.json",4);
+                        // 添加完成之后将pageNum设置为pageTotalNum
+                        window.pageNum = window.pageTotalNum;
+                        // 设置一个属性，用来保存上一个显示的页码数
+                        // 当pageNum改变的时候，prePageNum就会有作用
+                        // 初始完成之后，将pageSize设置成4
+                        window.pageSize = 4;
+                        createTable();
+                        window.prePageNum = window.pageNum;
+                    },
+                    "error": function (result) {
+                        layer.msg("操作失败！"+result.message);
+                    }
+                });
+                // 清空模态框的内容
+                $("#dateText").val("");
+                $("#eventInput").val("");
+                // 关闭模态框
+                $("#addPlanModal").modal("hide");
+            });
+
+            // 为修改按钮添加单机响应函数
+            $("table").delegate('.updateBtn','click',function () {
+                // 获取当前点击按钮所在行的plan信息
+                let tr = this.parentNode.parentNode;
+                window.planId = $(tr.children[0]).html();
+                // 获取计划
+                let planDate = $(tr.children[1]).html();
+                let event = $(tr.children[2]).html();
+                let lastTime = $(tr.children[3]).html();
+                // 开启模态框
+                $("#updateModal").modal("show");
+                // 填充属性
+                $("#updateModal #updateDateText").val(planDate);
+                $("#updateModal #updateEventInput").val(event);
+                $("#updateModal #updateLastTime").val(lastTime);
+            });
+
+            // 为模态框中的修改计划按钮绑定单及相应函数
+            $("#updatePlanRequest").click(function () {
+                // 获取修改过后的计划属性
+                let planDate = $("#updateModal #updateDateText").val();
+                let planEvent = $("#updateModal #updateEventInput").val();
+                let lastTime = $("#updateModal #updateLastTime").val();
+                // 封装要发送的数据
+                let planData = {
+                    "id": window.planId,
+                    "planDate": planDate,
+                    "planEvent": planEvent,
+                    "lastTime": lastTime
+                };
+                let data = JSON.stringify(planData);
+                $.ajax({
+                    "url": "update/member/plan.json",
+                    "type": "post",
+                    "contentType": "application/json",
+                    "dataType": "json",
+                    "data": data,
+                    "success": function (result) {
+                        layer.msg("操作成功！");
+                        createTable();
+                    },
+                    "error": function (result) {
+                        layer.msg("操作失败！"+result.message);
+                    }
+                });
+                // 关闭模态框
+                $("#updateModal").modal("hide");
+            });
+
+            // 批量删除
+            // 为全选框设置单击响应函数
+            $("#checkAll").click(function () {
+                // 获取当前是否选中
+                let style = $(this).is(":checked");
+                $(".childCheckBox").prop("checked", style);
+            })
+        });
+
+    </script>
+
+</head>
+<body>
+<div id="title" th:replace="home-page :: #title">
+    <!--            侧边栏-->
+    <div id="min-content">
+        <ul class="ulContent">
+            <li><a class="content-a" href="main.html">主页</a></li>
+            <li><a class="content-a" href="#">直播</a> </li>
+            <li><a class="content-a" href="#">赛事</a></li>
+            <li><a class="content-a" href="#">打赏</a></li>
+            <li><a class="content-a" href="#">敬请期待</a></li>
+        </ul>
+    </div>
+    <!--            用户信息-->
+    <div id="customer">
+        <div id="customerLine">
+            <a class="customer-a" href="login.html">登录</a>
+            <a class="customer-a" href="regist.html">注册</a>
+            <a class="customer-a" href="#">个人主页</a>
+            <a class="customer-a" href="#">退出</a>
+        </div>
+    </div>
+    <!--            搜索框-->
+    <div id="search-content">
+        <form style="height: 39px;width: 444px;">
+            <input type="text"/>
+            <div id="searchBtn">
+                <!--                    搜索按钮-->
+                <button type="button"><img src="img/main/searchBtn.png"/></button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--头部装饰栏-->
+<div id="top-banner"></div>
+
+
+<div id="userMainContent">
+    <!--左侧导航栏-->
+    <div class="leftContent">
+        <div class="userTitle">
+            <span>个人中心</span>
+        </div>
+        <div class="userTitle">
+            <ul>
+                <li><span><a href="to/member/home/page">首页</a></span></li>
+                <li class="activeLi"><span><a href="to/member/plan/page">今日计划</a></span></li>
+                <li><span><a href="to/update/member/info/page">我的信息</a></span></li>
+                <li><span><a href="to/member/hero/page">我的英雄</a></span></li>
+                <li><span><a href="http://localhost/order/to/hero/submit/page">我的订单</a></span></span></li>
+                <li><span><a href="to/member/wallet">我的钱包</a></span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="centerPlanContent">
+        <div class="planTitle panel-heading">
+            <i class="glyphicon glyphicon-comment"></i>
+            <span>我的计划</span>
+            <button id="addPlanBtn" style="float:right" class="btn btn-success">添加计划</button>
+        </div>
+        <div class="table-responsive mrt">
+
+
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>日期</th>
+                    <th>事要</th>
+                    <th>时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><input type="checkbox" style="height: 10px"></td>
+                    <td>2020-07-11</td>
+                    <td>摸鱼</td>
+                    <td>8h</td>
+                    <td width="100px">
+                        <button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
+                        <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><input type="checkbox" style="height: 10px"></td>
+                    <td>2020-07-11</td>
+                    <td>上分</td>
+                    <td>8h</td>
+                    <td width="100px">
+                        <button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
+                        <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><input type="checkbox" style="height: 10px"></td>
+                    <td>2020-07-11</td>
+                    <td>上分</td>
+                    <td>8h</td>
+                    <td width="100px">
+                        <button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
+                        <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><input type="checkbox" style="height: 10px"></td>
+                    <td>2020-07-11</td>
+                    <td>上分</td>
+                    <td>8h</td>
+                    <td width="100px">
+                        <button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
+                        <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="6" align="center">
+                        <ul class="pagination">
+                            <li class="disabled"><a href="#">上一页</a></li>
+                            <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>
+                            <li><a href="#">下一页</a></li>
+                        </ul>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+
+</div>
+
+<!--模态框-->
+<div th:replace="removeModal :: #removeModal"></div>
+<div th:replace="planAddModal :: #addPlanModal"></div>
+<div th:replace="updateModal :: #updateModal"></div>
+
+</body>
+</html>

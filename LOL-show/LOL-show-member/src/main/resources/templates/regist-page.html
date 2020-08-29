@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <base th:href="@{/}"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/clearDefault.css"/>
+    <link rel="stylesheet" type="text/css" href="css/mainNavBack.css">
+    <link rel="stylesheet" type="text/css" href="css/login.css"/>
+    <style type="text/css">
+        .area-menu{
+            margin: 10px 0;
+        }
+        .area-menu h1{
+            font-size: 15px;
+            color: #00a383;
+        }
+        .loginInput{
+            margin-bottom: 15px;
+        }
+        .cr{
+            color: red;
+        }
+        .normal{
+            color: #3e8f3e;
+        }
+
+    </style>
+    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="layer/layer.js"></script>
+    <script type="text/javascript" src="js/regist-member.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#password").on("input",function () {
+                // 前面三行为初始化
+                $("#verPassword").attr("class","cr");
+                $("#verPassword").html("密码不一致");
+                window.passwordProof = false;
+                // 如果密码框改变，确认密码仍然需要在验证
+                verfiyDetail();
+                initBar($(this).val());
+            });
+            // 验证
+            verfiyPassword();
+            $("#codeText").on("input",function () {
+                $("#registBtn").prop("disabled",true);
+                setBtn()
+            });
+            // 刷新验证码
+            $("#verificationCodeImg").bind("click", function () {
+                $(this).hide().attr('src', 'http://localhost/api/kaptcha/defaultKaptcha').fadeIn();
+            });
+
+            // 为注册按钮绑定单击响应函数
+            $("#registBtn").click(function () {
+                // 判断表单的数据是否有空位，如果有空，则返回
+                if("" == $("#username").val() || "" == $("#roleName").val() || "" == $("#age").val()
+                || "" == $("#phoneNum").val()){
+                layer.msg("请检查数据是否输入完成！");
+                return;
+                }
+                $("form").submit();
+            })
+        });
+    </script>
+</head>
+<body>
+<div id="title" th:replace="home-page :: #title">
+    <!--            侧边栏-->
+    <div id="min-content">
+        <ul class="ulContent">
+            <li><a class="content-a" href="main.html">主页</a></li>
+            <li><a class="content-a" href="#">直播</a> </li>
+            <li><a class="content-a" href="#">赛事</a></li>
+            <li><a class="content-a" href="#">打赏</a></li>
+            <li><a class="content-a" href="#">敬请期待</a></li>
+        </ul>
+    </div>
+    <!--            用户信息-->
+    <div id="customer">
+        <div id="customerLine">
+            <a class="customer-a" href="login.html">登录</a>
+            <a class="customer-a" href="regist.html">注册</a>
+            <a class="customer-a" href="home.html">个人主页</a>
+            <a class="customer-a" href="#">退出</a>
+        </div>
+    </div>
+    <!--            搜索框-->
+    <div id="search-content">
+        <form>
+            <input type="text"/>
+            <div id="searchBtn">
+                <!--                    搜索按钮-->
+                <button type="button"><img src="img/main/searchBtn.png"/></button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--头部装饰栏-->
+<div id="top-banner"></div>
+<!--登陆装饰栏-->
+<div class="title-line">
+    <span class="tit" style="font-size: 35px;font-family: 'JetBrains Mono'">注册</span>
+</div>
+<div id="registBox" style="height: 800px">
+    <div id="registInner">
+        <form action="http://localhost/do/member/regist" method="post">
+            <p style="margin: 0 auto;color: red" th:if="${session.exception} != '请登录以后再访问！'" th:text="${session.exception}">这里显示异常信息</p>
+            <p style="margin: 0 auto;color:red" th:text="${exception}">这里显示注册的异常信息</p>
+            <input name="userName" class="loginInput form-control" type="text" id="username" placeholder="用户名"/>
+            <!--            这里要新增一个大区-->
+
+            <div class="area-menu">
+                <h1>选择大区</h1>
+                <select name="areaId" style="width: 129px" class="addressSelect form-control">
+                    <option th:each="area: ${areaList}" th:value="${area.id}" th:text="${area.areaName}" value="艾欧尼亚">
+                        艾欧尼亚
+                    </option>
+                </select>
+            </div>
+            <input name="roleName" class="loginInput form-control" type="text" id="roleName" placeholder="角色名称"/>
+            <input name="age" class="loginInput form-control" type="text" id="age" placeholder="年龄"/>
+            <input name="password" class="loginInput form-control" type="password" id="password" placeholder="密码"/>
+            <p id="tmpP" class="cr" style="font-size: 15px;">
+                密码不能为空
+            </p>
+            <div class="progress">
+                <div id="processBar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                    <span class="sr-only">0% Complete (success)</span>
+                </div>
+            </div>
+            <p id="verPassword" class="cr" style="font-size: 15px;">
+                密码不一致
+            </p>
+            <input class="loginInput form-control" type="password" id="verfiyPassword" placeholder="确认密码"/>
+            <input name="phoneNum" class="loginInput form-control" type="text" id="phoneNum" placeholder="手机号"/>
+            <input name="code" class="loginInput form-control" type="text" id="codeText" placeholder="验证码"/>
+            <img id="verificationCodeImg" src="http://localhost/api/kaptcha/defaultKaptcha" style="cursor: pointer;" title="看不清？换一张" />
+            <button type="button" id="registBtn" style="float: right;width: 182px" class="registBtn form-control" disabled="disabled">注册</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

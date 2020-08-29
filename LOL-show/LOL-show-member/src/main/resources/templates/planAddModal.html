@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--添加计划模态框-->
+<div class="modal fade" id="addPlanModal" tabindex="-1" role="dialog" th:fragment="addPlanModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">添加计划</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <span>日期:</span><input id="dateText" class="form-control" type="text" placeholder="日期"/>
+                    <span>事要:</span><input id="eventInput" class="form-control" type="text" placeholder="事要"/>
+                    <span>持续时间:</span><select id="lastTime" style="width: 70px" class="form-control">
+                    <option value="1">
+                        1
+                    </option>
+                    <option value="2">
+                        2
+                    </option>
+                    <option value="3">
+                        3
+                    </option>
+                    <option value="4">
+                        4
+                    </option>
+                    <option value="5">
+                        5
+                    </option>
+                    <option value="6">
+                        6
+                    </option>
+                    <option value="7">
+                        7
+                    </option>
+                    <option value="8">
+                        8
+                    </option>
+                    <option value="9">
+                        9
+                    </option>
+                    <option value="10">
+                        10
+                    </option>
+                    <option value="11">
+                        11
+                    </option>
+                    <option value="12">
+                        12
+                    </option>
+                </select> <span style="position: relative;left:76px;top:-23px">h</span>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="addPlanRequest" type="button" class="btn btn-success">添加</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</body>
+</html>

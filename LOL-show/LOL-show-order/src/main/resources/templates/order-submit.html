@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>购物车</title>
+    <base th:href="@{/}"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/clearDefault.css"/>
+    <link rel="stylesheet" type="text/css" href="css/mainNavBack.css"/>
+    <link rel="stylesheet" type="text/css" href="css/market.css"/>
+    <link rel="stylesheet" type="text/css" href="css/shopCart.css"/>
+    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="layer/layer.js"></script>
+    <script>
+        // true:数值型的，false：非数值型
+        function getNum(str)
+        {
+            var pattern = new RegExp("[0-9]+");
+            var num = str.match(pattern);
+            return num;
+        }
+
+        function setCss(flag,amount){
+            if(flag){
+                // 改变按钮样式
+                $(".cartSubmit .redAmount").html(amount);
+                $(".confirm-Btn a").removeClass("buy_no_con");
+                $(".confirm-Btn a").addClass("confirmed");
+            }else {
+                // 改变按钮样式
+                $(".cartSubmit .redAmount").html("0.00");
+                $(".confirm-Btn a").removeClass("confirmed");
+                $(".confirm-Btn a").addClass("buy_no_con");
+            }
+        }
+
+        function addMoney(){
+            let amount = 0;
+            let iCheck = $("tbody .icoCheck");
+            for(let i = 0 ; i < iCheck.length ; i++){
+                if ($(iCheck[i]).hasClass("ico-checked")){
+                    let tr = iCheck[i].parentNode.parentNode;
+                    let td = tr.childNodes[5];
+                    let span = td.childNodes[1];
+                    let number = parseFloat($(span).html());
+                    amount += number;
+                }
+            }
+            return amount;
+        }
+        $(function () {
+            // 为全选按钮添加单机响应函数
+            $("#checkAll").click(function () {
+                $(this).toggleClass("ico-checked");
+                // 获取所有的单个单选框
+                let iCheck = $("tbody .icoCheck");
+                if($(this).hasClass("ico-checked")){
+                    for(let i = 0 ; i < iCheck.length ; i++){
+                        $(iCheck[i]).addClass("ico-checked");
+                    }
+                    let amount = addMoney();
+                    // 改变按钮样式
+                    setCss(true,amount);
+                }else{
+                    for(let i = 0 ; i < iCheck.length ; i++){
+                        $(iCheck[i]).removeClass("ico-checked");
+                    }
+                    setCss(false);
+                }
+            });
+
+            // 为单个选择按钮绑定单机响应函数
+            // 获取所有的iCheck
+            let iCheck = $("tbody .icoCheck");
+            $("tbody").delegate(".icoCheck","click",function () {
+                // 改变样式
+                $(this).toggleClass("ico-checked");
+                // 遍历iCheck选中的个数，如果没有达到iCheck的个数
+                // 删除全选框的选中样式
+                let tmpNum = 0;
+                for(let i = 0 ; i < iCheck.length; i++){
+                    if ($(iCheck[i]).hasClass("ico-checked")){
+                        tmpNum++;
+                    }
+                }
+                if(tmpNum == 0){
+                    $("#checkAll").removeClass("ico-checked");
+                    setCss(false);
+                    return;
+                }
+                if(tmpNum < iCheck.length && tmpNum != 0){
+                    $("#checkAll").removeClass("ico-checked");
+                }else if(tmpNum == iCheck.length){
+                    $("#checkAll").addClass("ico-checked");
+                }
+                let amount = addMoney();
+                // 改变按钮样式
+                setCss(true,amount);
+            });
+
+            // 为提交订单按钮绑定单机响应函数
+            $("#submitOrder").click(function () {
+                // 如果当前按钮是不能点击的状态，提示选择订单
+                if(!$(this).hasClass("confirmed")){
+                    layer.msg("请选择商品再提交订单！");
+                    return;
+                }else{
+                    // 创建一个数组，将所有被选中的订单的heroId存入
+                    let array = [];
+                    // 获取所有的单个单选框
+                    let iCheck = $("tbody .icoCheck");
+                    // 遍历
+                    for(let i = 0 ; i < iCheck.length ; i++){
+                        // 如果被选中
+                        if ($(iCheck[i]).hasClass("ico-checked")){
+                            let tr = iCheck[i].parentNode.parentNode;
+                            // 因为算了注释在里面
+                            let td = tr.childNodes[9];
+                            let heroId = parseInt(getNum($(td).html()));
+                            array.push(heroId);
+                        }
+                    }
+                    // 获取总的交易金额
+                    let amountMoney = parseFloat($(".cartSubmit .redAmount").html());
+                    // 发送ajax请求,付钱
+                    let submitResult = $.ajax({
+                        "url": "http://localhost/order/pay/to/save/hero",
+                        "type": "post",
+                        "data": {
+                            "money": amountMoney
+                        },
+                        "dataType": "json",
+                        "async": false
+                    });
+                    if(submitResult.status != 200){
+                        layer.msg("抱歉，出现了一个未知错误！ "+submitResult.statusText);
+                        return;
+                    }
+                    let submitJson = submitResult.responseJSON;
+                    if(submitJson.status != "succeed"){
+                        layer.msg(submitJson.message);
+                        return;
+                    }
+                    // 如果成功的话，就删除订单，并发货
+                    $.ajax({
+                        "url": "http://localhost/order/delete/order/send/hero",
+                        "type": "post",
+                        "data": {
+                            "heroIdList": array
+                        },
+                        "success":function () {
+                            layer.msg("支付成功");
+                            // 一秒钟后刷新页面
+                            setTimeout(function () {
+                                window.location.reload();
+                            },1000);
+                        },
+                        "error":function (result) {
+                            layer.msg(result.message);
+                        }
+                    })
+                }
+            })
+        });
+    </script>
+</head>
+<body>
+<!--大div，背景图片-->
+<div id='mainMarket'>
+    <!--顶栏-->
+    <div id="title" th:replace="include-title :: #title">
+        <!--            侧边栏-->
+        <div id="min-content">
+            <ul class="ulContent">
+                <li><a class="content-a" href="main.html">主页</a></li>
+                <li><a class="content-a" href="javascript:;">直播</a> </li>
+                <li><a class="content-a" href="javascript:;">赛事</a></li>
+                <li><a class="content-a" href="javascript:;">打赏</a></li>
+                <li><a class="content-a" href="javascript:;">敬请期待</a></li>
+            </ul>
+        </div>
+        <!--            用户信息-->
+        <div id="customer">
+            <div id="customerLine">
+                <a class="customer-a" href="login.html">登录</a>
+                <a class="customer-a" href="regist.html">注册</a>
+                <a class="customer-a" href="javascript:;">个人主页</a>
+                <a class="customer-a" href="javascript:;">退出</a>
+            </div>
+        </div>
+        <!--            搜索框-->
+        <div id="search-content">
+            <form style="float: left" class="form-inline">
+                <div class="form-group">
+                    <input style="width: 400px;" type="text" class="form-control" id="exampleInputName2">
+                    <button class="btn btn-default" style="float: right;width: 44px;height: 42px;"><i class="glyphicon glyphicon-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--    导航栏-->
+    <div class="marketNav" th:replace="include-marketCart :: #marketNav">
+        <!--        logo-->
+        <div class="storeNav">
+            <!--            商品ul-->
+            <div class="storeUl">
+                <ul>
+                    <li><a href="javascript:;">商品列表</a></li>
+                    <li><a href="javascript:;">活动专区</a></li>
+                    <li><a href="javascript:;">个人中心</a></li>
+                </ul>
+            </div>
+            <!--购物车-->
+            <div class="marketCart">
+                <a href="javascript:;" class="btn-cart-a" title="购物车">
+                    <i id="cartNum">(0)</i>
+                    <s class="cartIco"></s>
+                    购物车
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="mainer">
+        <!--        收件人信息-->
+<!--        <div class="addressee">-->
+<!--            <div class="addressTitle">-->
+<!--                <h3>收货角色信息</h3>-->
+<!--                <div class="line"></div>-->
+<!--            </div>-->
+<!--            <div class="addressBox">-->
+<!--                <label>选择角色:</label>-->
+<!--                <ul>-->
+<!--                    <li>-->
+<!--                        <select class="addressSelect">-->
+<!--                            <option value="艾欧尼亚">-->
+<!--                                艾欧尼亚-->
+<!--                            </option>-->
+<!--                            <option value="祖安">-->
+<!--                                祖安-->
+<!--                            </option>-->
+<!--                            <option value="黑色玫瑰">-->
+<!--                                黑色玫瑰-->
+<!--                            </option>-->
+<!--                        </select>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <select class="role">-->
+<!--                            <option value="请选择角色">-->
+<!--                                请选择角色-->
+<!--                            </option>-->
+<!--                        </select>-->
+<!--                    </li>-->
+<!--                </ul>-->
+
+<!--            </div>-->
+<!--        </div>-->
+
+        <div class="cartBox">
+            <div class="cartTitle">
+                <h3>商品信息</h3>
+                <div class="line"></div>
+            </div>
+            <div class="cartTable">
+                <table class="tableList">
+                    <thead>
+                    <tr style="border-bottom: 1px dotted #DEDFDE">
+                        <th scope="col">
+                            <i id="checkAll" class="icoCheck"></i>
+                            全选
+                        </th>
+                        <th scope="col">商品名称</th>
+                        <th scope="col">单价</th>
+                        <th scope="col">数量</th>
+<!--                        <th scope="col">小计</th>-->
+                        <th scope="col">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <div th:if="${OrderHeroInPage == null}" th:text="${exception}">这里显示异常信息</div>
+                    <div th:if="${#strings.isEmpty(OrderHeroInPage)}">您的购物车空空如也，快去添加商品吧！</div>
+                    <div th:if="${not #strings.isEmpty(OrderHeroInPage)}">
+                        <tr th:each="orderHero : ${OrderHeroInPage}">
+                            <th scope="row" class="td-check">
+                                <i class="icoCheck"></i>
+                            </th>
+                            <td style="text-align: left">
+                                <a th:href="'http://localhost/hero/detail/'+${orderHero.heroId}">
+                                    <img th:src="${orderHero.orderPic}" src="img/scot/cartTable01.jpg" width="39" height="39" alt="腕豪 瑟提"/>
+                                </a>
+                                <a th:text="${orderHero.orderName}" th:href="'http://localhost/hero/detail/'+${orderHero.heroId}" href="purchaseDetail.html">
+                                    腕豪 瑟提
+                                </a>
+                            </td>
+                            <td>
+                                <span class="single-price" th:text="${orderHero.orderPrice}">45.00</span>
+                                Q币
+                            </td>
+                            <td>
+                                <label class="cart-amount"><span>1</span></label>
+                            </td>
+                            <td>
+                                <a th:href="'http://localhost/order/remove/hero/'+${orderHero.heroId}" class="red">删除</a>
+                            </td>
+                        </tr>
+                    </div>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="cartSubmit">
+            <label>实付款:</label>
+            <span>
+                <span class="redAmount">0.00</span>
+                Q币
+            </span>
+            <div class="confirm-Btn">
+                <a id="submitOrder" class="btn-confirm buy_no_con" href="javascript:;">提交订单</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

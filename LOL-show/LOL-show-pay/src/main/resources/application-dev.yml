@@ -1,0 +1,28 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:1000/eureka
+server:
+  port: 8000
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://47.105.40.183:3306/lol-show?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: rootroot
+  application:
+    name: LOL-show-pay-consumer
+  redis:
+    host: 47.105.40.183
+alibaba:
+  pay:
+    appId: 2016103000778701
+    merchantPrivateKey: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCE8VJ2aLjx+Li0wpFifG5Ovr0PX+fPmVgpY+kseHZix0U0wPApSzSEap0umCEynU/WZK7VtyDCWYe6atLqJiC6gGSrYhhDGAfAedMrKBmiC8kXmSdxdEZSs8EL70nUwFmk0CSPpQ7dU1anJ5VTlisqQ0Akb3xCLJIaivgWpGVE8+FkL2veYCdXqV9F6gQREBKSI6kMcGkuvMcrqlbujAw9eXbAPu80WlVw7h63RmK9zUsOFcKRHvvtfDX2KvuvAucuUQngEOK0kWDXIqW+kHd56CVACC+Vjv/IdazQ+2ogLRa0KqkLfsXQNXIshxQVYKn5ivUzsP6nuIPlvXl38feFAgMBAAECggEAYdRADZikuJOCQKqJWAMfHV1pPP4jVPaQFO1L8oi2/ZuMRvTQBmMsQ2E9R8N1coym6qruqaB4P+yoX7sqeFoUbYn8Cs5F8mGlmrNLfQ+mRUQM+AuhJfEdqtBSeBjfqOrfTNRKg1ZAaQhh1OHhFkCEhTY15loQA5ZO8a9gPzE8wI7s7fw1q0iCT5Go01nNPtiCtekKk7GU7b9QTnVLDW3hPFDV19fQUuaEInAF37FwJELWov4SrqRUj6uu1Fzsi0Fikw6mZLvLW2K2JhFcAfwra6+R/dqSELvrRdJNL/oQ2k1FyuaTm8KOrrRZhvled/2vJpOp+lflwIHA9yopyWgohQKBgQDmxWIeouPcTZeoJF6v/xzA/K1ahtmED9Mzo0YZVIS94JXfDBq4xqaq7Ha/Yrm1nB6aQA8WifTc+bF9xIlefPcUBCuBjzwoWIUpGQR2DrGKeBtp85u/7Mu5ZtANpFUeVrsEv40xA652XjzG8Tw3U3C7vOv1WHfz9HYWjLXXquuXlwKBgQCTegErlLSOpQAraGJyUXsME10yOvnih1GV4Vagq68fTI4jzjTpUpwF5hw/6ZDYGRVJ5SEHcUlej5I6BxI7465hMyy6YYTgM3M0huuVIBzFFEyIxyGFhFPCdRaEZJYctij9wb00Ph2ztKXanHRvHToz3mgDi6cymvi9uFlY4PJtQwKBgFja00bcjUO8FJLHPjYh0l50bAMZPRNeTIHrcgg6xMmfedViAb/3rSDO34Idb0gADsBxvd19zOxwr+ivDf11vGTWnjHKhu05+Du0yET0r2OTj2qiQ+wILwD6F03JYoTF/Eh9wM2Ij1pAOsKXDAp5dES1H11ebQFftUBFeZbK1t+NAoGAJ9YyELqnl0yc4hzdUvINofJtH09tBrL0596pztbxhCvizWs7QbeN683/3YfTF3yXEpHxPRht8DwqDMCyPTlAdoMjVulWwlVDjnHPm0XEX7we/GeF95IKKiIExhiBsBnIststp7oLvepTTt0qWoVznmU6hZKoxHO2M1Fj2S1Sbw8CgYEAkA6TEhzunoA7YhQhh6w6K0hMztYz32BE+Os3n/KqL9xdqTw1Zo6CQLw9IyJmZxTZnlYscQe4/mZCkl5e9BWb5u8UM5b7Pe8o9j8t0a1G4UFZ50vaD2VNKEkhB0R8Jh1NWWQJDYsspsdq4GEuuLs1ftCfcH+bxEQz9xjfMbrHb7M=
+    alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo4ijdHkVTmIbiYjeiGaqqPiMmJGaLvdUmRH6yA1R5dbI2OFNjLec19Ogy/lThPMJ46IqY+D+kO32BfCEgI3ON8GWAk6v7HAvoZGzx1o6OMUAat7Up6bTiE7AZ344RVsOsg+vaHawCFhZsA7maQcu5yM8PqUeAJzggCCc1WBgdrSFQ4hseqi7TIzQxjL5oxlZTQXc+auJdyybCxJ2Q8Y7uJP2b7KeC80FYhW8RM0aF4FP0xO5mWE4ra6PeDxqyjcvyRtP01yBPGuUd9Ien/ef6NFHl7Tqa1eyrYk0wUekFZY7e8p5jbgk1GFpKytsnF0gy/GwJTrB2SKUnXM19brMHQIDAQAB
+    notifyUrl: http://localhost/pay/notify
+    returnUrl: http://localhost/pay/return
+    signType: RSA2
+    charset: utf-8
+    gatewayUrl: https://openapi.alipaydev.com/gateway.do
+    logPath: C:\\

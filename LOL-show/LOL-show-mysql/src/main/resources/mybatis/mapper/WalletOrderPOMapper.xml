@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.peanut.mapper.WalletOrderPOMapper" >
+  <resultMap id="BaseResultMap" type="com.peanut.entity.po.WalletOrderPO" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="order_name" property="orderName" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="order_num" property="orderNum" jdbcType="VARCHAR" />
+    <result column="aipay_num" property="aipayNum" jdbcType="VARCHAR" />
+    <result column="order_mark" property="orderMark" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, order_name, price, order_num, aipay_num, order_mark, member_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.peanut.entity.po.WalletOrderPOExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from lol_member_wallet_order
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from lol_member_wallet_order
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from lol_member_wallet_order
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.peanut.entity.po.WalletOrderPOExample" >
+    delete from lol_member_wallet_order
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.peanut.entity.po.WalletOrderPO" >
+    insert into lol_member_wallet_order (id, order_name, price, 
+      order_num, aipay_num, order_mark, 
+      member_id)
+    values (#{id,jdbcType=INTEGER}, #{orderName,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, 
+      #{orderNum,jdbcType=VARCHAR}, #{aipayNum,jdbcType=VARCHAR}, #{orderMark,jdbcType=VARCHAR}, 
+      #{memberId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.peanut.entity.po.WalletOrderPO" >
+    insert into lol_member_wallet_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderName != null" >
+        order_name,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="orderNum != null" >
+        order_num,
+      </if>
+      <if test="aipayNum != null" >
+        aipay_num,
+      </if>
+      <if test="orderMark != null" >
+        order_mark,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderName != null" >
+        #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="orderNum != null" >
+        #{orderNum,jdbcType=VARCHAR},
+      </if>
+      <if test="aipayNum != null" >
+        #{aipayNum,jdbcType=VARCHAR},
+      </if>
+      <if test="orderMark != null" >
+        #{orderMark,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.peanut.entity.po.WalletOrderPOExample" resultType="java.lang.Integer" >
+    select count(*) from lol_member_wallet_order
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update lol_member_wallet_order
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderName != null" >
+        order_name = #{record.orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.price != null" >
+        price = #{record.price,jdbcType=DOUBLE},
+      </if>
+      <if test="record.orderNum != null" >
+        order_num = #{record.orderNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aipayNum != null" >
+        aipay_num = #{record.aipayNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderMark != null" >
+        order_mark = #{record.orderMark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.memberId != null" >
+        member_id = #{record.memberId,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update lol_member_wallet_order
+    set id = #{record.id,jdbcType=INTEGER},
+      order_name = #{record.orderName,jdbcType=VARCHAR},
+      price = #{record.price,jdbcType=DOUBLE},
+      order_num = #{record.orderNum,jdbcType=VARCHAR},
+      aipay_num = #{record.aipayNum,jdbcType=VARCHAR},
+      order_mark = #{record.orderMark,jdbcType=VARCHAR},
+      member_id = #{record.memberId,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.peanut.entity.po.WalletOrderPO" >
+    update lol_member_wallet_order
+    <set >
+      <if test="orderName != null" >
+        order_name = #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="orderNum != null" >
+        order_num = #{orderNum,jdbcType=VARCHAR},
+      </if>
+      <if test="aipayNum != null" >
+        aipay_num = #{aipayNum,jdbcType=VARCHAR},
+      </if>
+      <if test="orderMark != null" >
+        order_mark = #{orderMark,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.peanut.entity.po.WalletOrderPO" >
+    update lol_member_wallet_order
+    set order_name = #{orderName,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      order_num = #{orderNum,jdbcType=VARCHAR},
+      aipay_num = #{aipayNum,jdbcType=VARCHAR},
+      order_mark = #{orderMark,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

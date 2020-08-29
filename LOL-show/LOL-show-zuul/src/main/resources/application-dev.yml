@@ -1,0 +1,32 @@
+server:
+  port: 80
+spring:
+  application:
+    name: LOL-show-zuul
+  redis:
+    host: 47.105.40.183
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:1000/eureka
+zuul:
+  routes:
+    member:
+      serviceId: LOL-show-member-consumer
+      path: /**
+    market:
+      serviceId: LOL-show-market-consumer
+      path: /market/**
+    hero:
+      serviceId: LOL-show-hero-consumer
+      path: /hero/**
+    order:
+      serviceId: LOL-show-order-consumer
+      path: /order/**
+    pay:
+      serviceId: LOL-show-pay-consumer
+      path: /pay/**
+  sensitive-headers: "*"
+ribbon:
+  ConnectTimeout: 5000 # 连接超时时间(ms)
+  ReadTimeout: 5000 # 通信超时时间(ms)

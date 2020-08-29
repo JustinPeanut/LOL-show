@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>英雄详情</title>
+    <base th:href="@{/}"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/mainNavBack.css"/>
+    <link rel="stylesheet" type="text/css" href="css/clearDefault.css"/>
+    <link rel="stylesheet" type="text/css" href="css/login.css"/>
+    <link rel="stylesheet" type="text/css" href="css/home.css">
+    <link rel="stylesheet" type="text/css" href="css/bgStory.css"/>
+</head>
+<body style="height: 1500px">
+<!--顶栏-->
+<div id="title" th:replace="include-title :: #title">
+    <!--            侧边栏-->
+    <div id="min-content">
+        <ul class="ulContent">
+            <li><a class="content-a" href="main.html">主页</a></li>
+            <li><a class="content-a" href="#">直播</a> </li>
+            <li><a class="content-a" href="#">赛事</a></li>
+            <li><a class="content-a" href="#">打赏</a></li>
+            <li><a class="content-a" href="#">敬请期待</a></li>
+        </ul>
+    </div>
+    <!--            用户信息-->
+    <div id="customer">
+        <div id="customerLine">
+            <a class="customer-a" href="login.html">登录</a>
+            <a class="customer-a" href="regist.html">注册</a>
+            <a class="customer-a" href="#">个人主页</a>
+            <a class="customer-a" href="#">退出</a>
+        </div>
+    </div>
+    <!--            搜索框-->
+    <div id="search-content">
+        <form style="float: left" class="form-inline">
+            <div class="form-group">
+                <input style="width: 400px;" type="text" class="form-control" id="exampleInputName2">
+                <button class="btn btn-default" style="float: right;width: 44px;height: 42px;"><i class="glyphicon glyphicon-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+<p th:text="${exception}">这里显示异常信息</p>
+<div th:if="${heroDetail == null}" th:text="抱歉！没有查询到任何信息"></div>
+<div th:id="${heroDetail != null}">
+    <div class="bigPic">
+        <div class="detailData">
+            <h1 th:text="${heroDetail.fullName}">黑暗之女</h1>
+            <h2 th:text="${heroDetail.nickName}">安妮</h2>
+            <div class="tag-span">
+                <span th:text="${heroDetail.type}">
+                    法师
+                </span>
+            </div>
+            <div class="detailBuy">
+                <a href="http://localhost/market/to/market/home/page" class="buyA">购买英雄</a>
+            </div>
+        </div>
+        <span class="sbg"></span>
+        <div class="detailBigImg">
+            <img th:src="${heroDetail.imgBig}" src="img/heroBoxList/big01.jpg"/>
+        </div>
+    </div>
+
+<div class="infoStory">
+    <h4 class="infoTitle">
+        背景故事
+    </h4>
+    <div class="bgStory">
+        <div th:text="${heroDetail.backStory}" class="dataLore">
+            既拥有危险夺命的能力，又拥有小大人儿的可爱模样，安妮是一名掌握着深不可测的占火魔法的幼女魔法师。xxxxxxx
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        </div>
+    </div>
+    <div class="talk">
+        <h4 class="infoTitle">
+            评论
+        </h4>
+    </div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商城主页</title>
+    <base th:href="@{/}"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/clearDefault.css"/>
+    <link rel="stylesheet" type="text/css" href="css/mainNavBack.css"/>
+    <link rel="stylesheet" type="text/css" href="css/market.css"/>
+    <style>
+        .heroList li a:hover,.letter-filter a:hover{
+            color: lightgreen;
+        }
+    </style>
+    <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap/bootstrap-min.js"></script>
+    <script type="text/javascript" src="layer/layer.js"></script>
+    <script type="text/javascript" src="js/page-help.js"></script>
+    <script type="text/javascript">
+        // true:数值型的，false：非数值型
+        function getNum(str)
+        {
+            var pattern = new RegExp("[0-9]+");
+            var num = str.match(pattern);
+            return num;
+        }
+
+        function isNumber(value) {
+            var patrn = /^(-)?\d+(\.\d+)?$/;
+            if (patrn.exec(value) == null || value == "") {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        $(function () {
+            // 发送ajax请求，获取全部的stickHero
+            // 初始化刚开始到达我的计划页面的页码
+            window.pageNum = 1;
+            // 当pageSize等于0的时候，相当于查询出所有的结果，这里就是要查出所有的结果
+            window.pageSize = 0;
+            // typeId = 0,表示不指定任何类型
+            window.typeId = 0;
+            // 初始化当前keyword
+            window.keyword = "";
+            // 初始化当前的价格的最低价和最高价
+            window.lowPrice = -1;
+            window.highPrice = 99999;
+            let initJson = {"pageNum": window.pageNum,"pageSize": window.pageSize,"typeId": window.typeId};
+            window.url = "http://localhost/market/get/stick/info.json";
+            // 初始化导航条
+            init(url,8,initJson);
+            // 设置一个属性，用来保存上一个显示的页码数
+            // 当pageNum改变的时候，prePageNum就会有作用
+            window.prePageNum = window.pageNum;
+            // 初始完成之后，将pageSize设置成8
+            window.pageSize = 8;
+            // 填充英雄列表
+            createStickTable(url,{"pageNum": window.pageNum,"pageSize": window.pageSize,"typeId": window.typeId});
+
+            // 获取type的li
+            let li = $(".heroList li");
+            for(let i = 0 ; i < li.length ; i++){
+                $(li[i]).click(function () {
+                    // 发送ajax请求
+                    // 设置li的点击相应的样式
+                    for(let j = 0 ; j < li.length ; j++){
+                        $(li[j]).attr("style","font-size:12px")
+                    }
+                    $(this).attr("style","font-size:20px");
+                    window.pageNum = 1;
+                    // 恢复li标签的选中状态为1
+                    window.pageSize = 0;
+                    window.typeId = i+1;
+                    // 收集信息
+                    let initJson = {"pageNum":window.pageNum,"pageSize":window.pageSize,"typeId":window.typeId};
+                    init(window.url,8,initJson);
+                    // 解决切换type，翻页仍然选中的bug
+                    setLiCurrent();
+                    window.prePageNum = window.pageNum;
+                    window.pageSize = 8;
+                    createStickTable(window.url,{"pageNum":window.pageNum,"pageSize":window.pageSize,"typeId":window.typeId})
+                });
+
+            };
+            // 为拼音首字母查询添加单击响应函数
+            $(".letter-filter a").click(function () {
+                // 初始化
+                window.pageNum = 1;
+                window.pageSize = 0;
+                let prefixLetter = $(this).html();
+                let initJson = {"pageNum": window.pageNum,"pageSize": window.pageSize,"prefixLetter": prefixLetter,"typeId":window.typeId};
+                init(window.url,8,initJson);
+                setLiCurrent();
+                // 填充表格
+                window.prePageNum = window.pageNum;
+                window.pageSize = 8;
+                createStickTable(window.url,{"pageNum": window.pageNum,"pageSize": window.pageSize,"prefixLetter": prefixLetter,"typeId":window.typeId});
+            });
+
+            // 为关键词，和加个区间的确认按钮绑定单击响应函数
+            $("#commit").click(function () {
+                window.keyword = "";
+                window.lowPrice= "";
+                window.highPrice = "";
+               // 获取关键词文本框，和价格区间的最低价和最低价的内容
+                let keyword = $("#keyword").val();
+                let lowPrice = $("#lowPrice").val();
+                let highPrice = $("#highPrice").val();
+                if(keyword !== ""){
+                    window.keyword = keyword;
+                }
+                if(lowPrice !== "" && isNumber(lowPrice)){
+                    window.lowPrice = lowPrice;
+                }
+                if(highPrice !=="" && isNumber(highPrice)){
+                    window.highPrice = highPrice;
+                }
+                // 发送ajax请求
+                // 初始化
+                window.pageNum = 1;
+                window.pageSize = 0;
+                let initJson =
+                    {
+                        "pageNum": window.pageNum,
+                        "pageSize": window.pageSize,
+                        "typeId":window.typeId,
+                        "keyword":window.keyword,
+                        "lowPrice":window.lowPrice,
+                        "highPrice":window.highPrice
+                    };
+                init(window.url,8,initJson);
+                // 解决切换type，翻页仍然选中的bug
+                setLiCurrent();
+                window.prePageNum = window.pageNum;
+                window.pageSize = 8;
+                createStickTable(window.url,{
+                    "pageNum": window.pageNum,
+                    "pageSize": window.pageSize,
+                    "typeId":window.typeId,
+                    "keyword":window.keyword,
+                    "lowPrice":window.lowPrice,
+                    "highPrice":window.highPrice
+                });
+
+            });
+
+            // 为立即购买绑定单机响应函数
+            $(".head").delegate(".buyNow","click",function () {
+                let dl = this.parentNode.parentNode.parentNode;
+                let dt = dl.childNodes[1];
+                // 获取dt中的第一个数字，也就是id
+                let num = getNum($(dt).html());
+                let number = parseInt(num);
+                // 发送ajax请求，获取所点击的要加入购物车的英雄信息
+                let result = $.ajax({
+                    "url": "http://localhost/market/get/click/hero.json",
+                    "type": "post",
+                    "data":{
+                        "heroId": number
+                    },
+                    "dataType": "json",
+                    "async": false
+                });
+
+                if(result.status != 200){
+                    layer.msg("出了一个错误："+result.statusText);
+                    return;
+                }
+                let responseJSON = result.responseJSON;
+                if(responseJSON == null){
+                    layer.msg("请重新登录！");
+                    return;
+                }
+                if("succeed" != responseJSON.status){
+                    layer.msg("服务器端出了一个错误！"+responseJSON.message);
+                }
+                // 如果一切正常，就获取返回的对象
+                let hero = responseJSON.data;
+                let heroFullName = hero.fullName+" "+hero.nickName;
+                // 弹出模态框，确认加入购物车
+                $("#heroModel").modal("show");
+                // 填充信息
+                $(".left-heroPic img").attr("src",hero.imgScot);
+                $(".left-heroPic img").attr("alt",heroFullName);
+                $(".left-heroPic p").html(heroFullName);
+                $("#priceHero").html(hero.price);
+            });
+
+            // 为模态框中的加入购物车绑定单机响应函数
+            $("#addCart").click(function () {
+                // 发送ajax请求，加入购物车
+                $.ajax({
+                    "url": "http://localhost/order/add/hero/to/cart",
+                    "type": "post",
+                    "data": {},
+                    "dataType": "json",
+                    "success": function (result) {
+                        if(result.status == "failed"){
+                            layer.msg(result.message);
+                            return ;
+                        }else {
+                            layer.msg("添加成功，请至购物车查看！")
+                        }
+                        // 两秒之后刷新页面
+                        setTimeout(function () {
+                            window.location.reload();
+                        },2000);
+                    },
+                    "error": function (result) {
+                        layer.msg("出现了一个错误！"+result.statusText);
+                    }
+                });
+                // 关闭模态框
+                $("#heroModel").modal("hide");
+            })
+        });
+    </script>
+</head>
+<body>
+<!--大div，背景图片-->
+<div id='mainMarket'>
+    <div id="title" th:replace="include-title :: #title">
+        <!--            侧边栏-->
+        <div id="min-content">
+            <ul class="ulContent">
+                <li><a class="content-a" href="main.html">主页</a></li>
+                <li><a class="content-a" href="#">直播</a> </li>
+                <li><a class="content-a" href="#">赛事</a></li>
+                <li><a class="content-a" href="#">打赏</a></li>
+                <li><a class="content-a" href="#">敬请期待</a></li>
+            </ul>
+        </div>
+        <!--            用户信息-->
+        <div id="customer">
+            <div id="customerLine">
+                <a class="customer-a" href="login.html">登录</a>
+                <a class="customer-a" href="regist.html">注册</a>
+                <a class="customer-a" href="#">个人主页</a>
+                <a class="customer-a" href="#">退出</a>
+            </div>
+        </div>
+        <!--            搜索框-->
+        <div id="search-content">
+            <form style="float: left" class="form-inline">
+                <div class="form-group">
+                    <input style="width: 400px;" type="text" class="form-control" id="exampleInputName2">
+                    <button class="btn btn-default" style="float: right;width: 44px;height: 42px;"><i class="glyphicon glyphicon-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--    导航栏-->
+    <div id="marketNav" class="marketNav" th:fragment="marketNav">
+        <!--        logo-->
+        <div class="storeNav">
+            <!--            商品ul-->
+            <div class="storeUl">
+                <ul>
+                    <li><a href="http://localhost/market/to/market/home/page">商品列表</a></li>
+                    <li><a href="#">活动专区</a></li>
+                    <li><a href="http://localhost/to/member/home/page">个人中心</a></li>
+                </ul>
+            </div>
+            <!--购物车-->
+            <div id="marketCart" class="marketCart" th:fragment="marketCart">
+                <a href="http://localhost/order/to/hero/submit/page" class="btn-cart-a" title="购物车">
+                    <i id="cartNum" th:if="${session.listSize == null}" th:text="'('+ 0 +')'">(0)</i>
+                    <i id="cartNum" th:if="${session.listSize != null}" th:text="'('+${session.listSize}+')'">(0)</i>
+                    <s class="cartIco"></s>
+                    购物车
+                </a>
+            </div>
+        </div>
+        <!--        子导航栏-->
+        <div class="subNav">
+            <ul class="subUl">
+                <li><a href="javascript:;">英雄</a></li>
+            </ul>
+        </div>
+    </div>
+    <!--主要内容-->
+    <div class="marketContent">
+        <!--        侧边栏-->
+        <div id="marketSideBar" class="marketSideBar" th:fragment="marketSideBar">
+            <h3>
+                热门排行
+                <span class="green-line"></span>
+            </h3>
+            <ul class="hotRank">
+                <div th:if="${scotHeroList == null}" th:text="${exception}">这里显示异常信息</div>
+                <div th:if="${scotHeroList != null}">
+                    <li th:each="scotHero,iterStat : ${scotHeroList}">
+                        <a th:href="'http://localhost/market/to/cart/'+${scotHero.id}" class="rank-link">
+                            <div th:text="${iterStat.count}" class="icoRank comIco">02</div>
+                            <div class="djimg">
+                                <img th:src="${scotHero.imgScot}" src="img/scot/scotPic02.jpg" width="76" height="76" alt="屠龙勇士 赵信"/>
+                            </div>
+                            <div class="djinfo fr">
+                                <p th:text="${scotHero.fullName}+' '+${scotHero.nickName}" class="djname">屠龙勇士 赵信</p>
+                                <p class="djcpri" style="font-size:12px; margin-top: 10px;">LB价：<strong th:text="${scotHero.price}">76.63 </strong></p>
+                            </div>
+                        </a>
+                    </li>
+                </div>
+            </ul>
+        </div>
+
+        <!--        分页显示区-->
+        <div class="heroPage">
+            <!--            分页导航标题-->
+            <div class="heroBar">
+                <p class="heroTitle">全部英雄</p>
+                <ul class="heroList">
+                    <li><a href="javascript:;" title="战士" class="hero-li">战士</a></li>
+                    <li><a href="javascript:;" title="法师" class="hero-li">法师</a></li>
+                    <li><a href="javascript:;" title="刺客" class="hero-li">刺客</a></li>
+                    <li><a href="javascript:;" title="坦克" class="hero-li">坦克</a></li>
+                    <li><a href="javascript:;" title="射手" class="hero-li">射手</a></li>
+                </ul>
+            </div>
+            <!--关键词搜索-->
+            <div class="filterBox">
+                <div class="heroItem">
+                    <div class="searchBar">
+                        <label>关键词</label>
+                        <input id="keyword" type="text" class="search-input" style="margin-left: 3px"/>
+                    </div>
+                </div>
+                <div class="priceBar">
+                    价格区间：
+                    <input id="lowPrice" type="text" class="input-area-txt"/>
+                    <label>-</label>
+                    <input id="highPrice" type="text" class="input-area-txt"/>
+                </div>
+                <div class="searchBtn">
+                    <a id="commit" href="javascript:;" title="确定">确定</a>
+                </div>
+            </div>
+            <!--            分页数-->
+            <div class="letter-filter">
+                <ul>
+                    <li><a href="javascript:;" class="letter">A</a></li>
+                    <li><a href="javascript:;" class="letter">B</a></li>
+                    <li><a href="javascript:;" class="letter">C</a></li>
+                    <li><a href="javascript:;" class="letter">D</a></li>
+                    <li><a href="javascript:;" class="letter">E</a></li>
+                    <li><a href="javascript:;" class="letter">F</a></li>
+                    <li><a href="javascript:;" class="letter">G</a></li>
+                    <li><a href="javascript:;" class="letter">H</a></li>
+                    <li><a href="javascript:;" class="letter">I</a></li>
+                    <li><a href="javascript:;" class="letter">J</a></li>
+                    <li><a href="javascript:;" class="letter">K</a></li>
+                    <li><a href="javascript:;" class="letter">L</a></li>
+                    <li><a href="javascript:;" class="letter">M</a></li>
+                    <li><a href="javascript:;" class="letter">N</a></li>
+                    <li><a href="javascript:;" class="letter">O</a></li>
+                    <li><a href="javascript:;" class="letter">P</a></li>
+                    <li><a href="javascript:;" class="letter">Q</a></li>
+                    <li><a href="javascript:;" class="letter">R</a></li>
+                    <li><a href="javascript:;" class="letter">S</a></li>
+                    <li><a href="javascript:;" class="letter">T</a></li>
+                    <li><a href="javascript:;" class="letter">U</a></li>
+                    <li><a href="javascript:;" class="letter">V</a></li>
+                    <li><a href="javascript:;" class="letter">W</a></li>
+                    <li><a href="javascript:;" class="letter">X</a></li>
+                    <li><a href="javascript:;" class="letter">Y</a></li>
+                    <li><a href="javascript:;" class="letter">Z</a></li>
+                </ul>
+            </div>
+            <!--            分页显示英雄-->
+            <div class="listWarp">
+                <div class="listBox">
+                    <div class="head">
+                        <dl>
+                            <dt>
+                                <a href="purchaseDetail.html"><img src="img/scot/listBox01.jpg" width="116" height="212" alt="傲之追猎者 雷恩加尔"/></a>
+                            </dt>
+                            <dd>
+                                <a href="#" class="djname">
+                                    <strong>傲之追猎者 雷恩加尔</strong>
+                                </a>
+                                <div class="boxList">
+                                    Q币价：
+                                    <span class="fwb">&nbsp;&nbsp;&nbsp;</span>
+                                    <span class="fwb">45</span>
+                                    <span class="fwb">Q币</span>
+                                </div>
+                                <div class="boxList">
+                                    微信价：
+                                    <span class="fwb">&nbsp;&nbsp;&nbsp;</span><span class="fwb">￥</span><span class="fwb">43.65</span>
+                                </div>
+                                <div class="purchaseDiv">
+                                    <a href="javascript:;" class="buyNow">立即购买</a>
+                                </div>
+                            </dd>
+                        </dl>
+                    </div>
+                    <ul class="pagination" style="position: absolute;left: 16px;top: 773px">
+                    <li class="disabled"><a href="#">上一页</a></li>
+                    <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li><a href="#">下一页</a></li>
+                </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--添加购物车-->
+<div class="modal fade" id="heroModel" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">加入购物车</h4>
+            </div>
+            <div class="modal-body">
+                <div class="confirm-heroBox" style="height: 165px">
+                    <div class="left-heroPic" style="width: 190px;height: 165px;position: relative">
+                        <img src="img/scot/scotPic01.jpg" alt="驯龙女巫 婕拉"/>
+                        <p style="font-family: 'JetBrains Mono';font-size: 19px;font-weight: bold;text-align: center">剑魂 永恩</p>
+                    </div>
+                    <div class="right-heroDetail" style="position: relative;left: 268px;top: -129px;font-size: 16px;font-family: 'JetBrains Mono'">
+                        <dl>
+                            <dt>价格：</dt>
+                            <dd style="position: relative;top: -27px;left: 55px;color: #ff5900"><span id="priceHero" style="font-size: 22px" class="heroPrice">25</span><span>  LB</span></dd>
+                        </dl>
+                        <dl>
+                            <dt>期限：</dt>
+                            <dd style="position: relative;top: -22px;left: 55px;color: #ff5900">永久</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="addCart" type="button" class="btn btn-success">加入购物车</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+</body>
+</html>

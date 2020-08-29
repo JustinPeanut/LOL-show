@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="5;url=http://localhost/to/login/page">
+    <title>Title</title>
+    <base th:href="@{/}"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/clearDefault.css"/>
+    <link rel="stylesheet" type="text/css" href="css/mainNavBack.css">
+    <link rel="stylesheet" type="text/css" href="css/login.css"/>
+</head>
+
+<body onload="run()">
+<div id="title" th:replace="home-page :: #title">
+    <!--            侧边栏-->
+    <div id="min-content">
+        <ul class="ulContent">
+            <li><a class="content-a" href="main.html">主页</a></li>
+            <li><a class="content-a" href="#">直播</a> </li>
+            <li><a class="content-a" href="#">赛事</a></li>
+            <li><a class="content-a" href="#">打赏</a></li>
+            <li><a class="content-a" href="#">敬请期待</a></li>
+        </ul>
+    </div>
+    <!--            用户信息-->
+    <div id="customer">
+        <div id="customerLine">
+            <a class="customer-a" href="login.html">登录</a>
+            <a class="customer-a" href="regist.html">注册</a>
+            <a class="customer-a" href="#">个人主页</a>
+            <a class="customer-a" href="#">退出</a>
+        </div>
+    </div>
+    <!--            搜索框-->
+    <div id="search-content">
+        <form style="float: left" class="form-inline">
+            <div class="form-group">
+                <input style="width: 400px;" type="text" class="form-control" id="exampleInputName2">
+                <button class="btn btn-default" style="float: right;width: 44px;height: 42px;"><i class="glyphicon glyphicon-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--头部装饰栏-->
+<div id="top-banner"></div>
+<!--登陆装饰栏-->
+<div class="title-line">
+    <span class="tit" style="font-size: 35px;font-family: 'JetBrains Mono'">注册成功</span>
+</div>
+
+<div style="width: 980px;height: 100px;margin: 10px auto" class="alert alert-success" role="alert">
+    <h2 style="font-size: 25px;margin: 5px auto;text-align: center">恭喜你，注册成功!</h2>
+    <a style="position: relative;left: 600px;top: 20px;font-size: 15px" href="http://localhost/to/login/page"><span id="timeOut">5</span>秒后系统会自动跳转,也可以点击此处直接跳转</a>
+</div>
+</body>
+<script type="text/javascript">
+    // 页面一加载完成，该方法就会执行
+    // 读秒，一秒钟数字改变一次
+    var x = 5;
+    function run(){
+        // 获取到的是span标签的对象
+        var span = document.getElementById("timeOut");
+        // 获取span标签中间的文本
+        span.innerHTML = x;
+        x--;
+        // 再让run方法执行呢，一秒钟执行一次
+        window.setTimeout("run()", 1000);
+    }
+</script>
+</html>
